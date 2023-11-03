@@ -229,6 +229,12 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, Menu):
         layout = self.layout
         prefs = fetch_user_preferences()
         ob_type = context.object.type
+        if layout.operator_context == 'EXEC_REGION_WIN':
+            layout.operator_context = 'INVOKE_REGION_WIN'
+            layout.operator("wm.search_single_menu", text="Search...", icon='VIEWZOOM').menu_idname = self.bl_idname
+            layout.separator()
+
+        layout.separator()
         self.operator_modifier_add(layout, 'NODES')
         layout.separator()
         #TODO - Add poll function to only display these menus if their catalogs exist
