@@ -1,10 +1,16 @@
 import bpy
 from bpy.props import BoolProperty, EnumProperty, StringProperty
 from . import keymap_ui
-
+from .ui import fetch_user_preferences
 
 class ClassicModifierPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
+
+    show_keymaps: BoolProperty(
+        name="Show Keymaps",
+        default=False,
+        description="When enabled, displays keymap list",
+    )
 
     show_assets: BoolProperty(
         name="Show Assets Menu",
@@ -97,7 +103,7 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         col2.prop(self, "asset_menu_label")
         self.draw_prop_newline(col2, "built_in_asset_categories")
 
-        keymap_ui.draw_keyboard_shorcuts(self, layout, context, toggle_idname="classic_modifier_menu_show_keymaps")
+        keymap_ui.draw_keyboard_shorcuts(self, layout, context)
         return
     
 
@@ -107,17 +113,12 @@ classes = (
 
 
 def register():
-    bpy.types.WindowManager.classic_modifier_menu_show_keymaps = BoolProperty(
-        name="Show Keymaps",
-        default=False,
-        description="When enabled, displays keymap list"
-    )
-
     for cls in classes:
         bpy.utils.register_class(cls)
+
+    prefs = fetch_user_preferences()
+    prefs.property_unset("show_keymaps")
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
-
-    del bpy.types.WindowManager.classic_modifier_menu_show_keymaps
