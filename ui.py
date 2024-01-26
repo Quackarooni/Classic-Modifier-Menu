@@ -286,6 +286,7 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
 
 class OBJECT_MT_gpencil_modifier_add(Menu):
     bl_label = ""
+    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     GPENCIL_MODIFIER_DATA = {
         enum_it.identifier: (enum_it.name, enum_it.icon)
