@@ -300,28 +300,28 @@ class OBJECT_MT_gpencil_modifier_add(Menu):
         return ob and ob.type == 'GPENCIL'
 
     @classmethod
-    def draw_operator_column(cls, layout, header, types):
+    def draw_operator_column(cls, layout, header, types, icon='NONE'):
         col = layout.column()
         text_ctxt = cls.GPENCIL_MODIFIER_TYPES_I18N_CONTEXT
 
-        col.label(text=header)
+        col.label(text=header, icon=icon)
         col.separator()
         for op_type in types:
-            label, icon = cls.GPENCIL_MODIFIER_DATA[op_type]
-            col.operator("object.gpencil_modifier_add", text=label, icon=icon, text_ctxt=text_ctxt).type = op_type
+            label, op_icon = cls.GPENCIL_MODIFIER_DATA[op_type]
+            col.operator("object.gpencil_modifier_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
 
 
     def draw(self, _context):
         layout = self.layout
         layout = layout.row()
 
-        self.draw_operator_column(layout, header="Modify", 
+        self.draw_operator_column(layout, header="Modify", icon='MODIFIER_DATA',
             types=('GP_TEXTURE', 'GP_TIME', 'GP_WEIGHT_ANGLE', 'GP_WEIGHT_PROXIMITY'))
-        self.draw_operator_column(layout, header="Generate", 
+        self.draw_operator_column(layout, header="Generate", icon='FILE_3D',
             types=('GP_ARRAY', 'GP_BUILD', 'GP_DASH', 'GP_ENVELOPE', 'GP_LENGTH', 'GP_LINEART', 'GP_MIRROR', 'GP_MULTIPLY', 'GP_OUTLINE', 'GP_SIMPLIFY', 'GP_SUBDIV'))
-        self.draw_operator_column(layout, header="Deform", 
+        self.draw_operator_column(layout, header="Deform", icon='STROKE',
             types=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK'))
-        self.draw_operator_column(layout, header="Color", 
+        self.draw_operator_column(layout, header="Color", icon='OVERLAY', 
             types=('GP_COLOR', 'GP_OPACITY', 'GP_TINT'))
 
 
