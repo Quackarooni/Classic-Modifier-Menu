@@ -8,7 +8,8 @@ class InvokeMenuBaseClass:
     def poll(cls, context):
         # NOTE: This operator only exists to add a poll to the add modifier shortcut in the property editor.
         space = context.space_data
-        return space and space.type == 'PROPERTIES' and space.context == 'MODIFIER'
+        obj = context.active_object
+        return space and space.type == 'PROPERTIES' and space.context == 'MODIFIER' and obj and obj.type != 'GPENCIL'
 
     def invoke(self, context, event):
         return bpy.ops.wm.call_menu(name=self.menu_id)
