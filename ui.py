@@ -296,11 +296,6 @@ class OBJECT_MT_gpencil_modifier_add(Menu):
     GPENCIL_MODIFIER_TYPES_I18N_CONTEXT = bpy.types.GpencilModifier.bl_rna.properties["type"].translation_context
 
     @classmethod
-    def poll(cls, context):
-        ob = context.object
-        return ob and ob.type == 'GPENCIL'
-
-    @classmethod
     def draw_operator_column(cls, layout, header, types, icon='NONE'):
         col = layout.column()
         text_ctxt = cls.GPENCIL_MODIFIER_TYPES_I18N_CONTEXT
