@@ -275,11 +275,12 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
         layout = self.layout
         prefs = fetch_user_preferences()
         gpencil_menu_label = "Add Modifier"
+        menu_idname = "OBJECT_MT_gpencil_modifier_add"
 
         if prefs.display_as == "DROPDOWN":
-            layout.menu("OBJECT_MT_gpencil_modifier_add", text=gpencil_menu_label)
+            layout.menu(menu_idname, text=gpencil_menu_label)
         elif prefs.display_as == "BUTTON":
-            layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = "OBJECT_MT_gpencil_modifier_add"
+            layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = menu_idname
 
         layout.template_grease_pencil_modifiers()
 
