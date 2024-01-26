@@ -1,10 +1,11 @@
 import bpy
 from bpy.types import Panel, Menu
 
-from bl_ui import properties_data_modifier
+from bl_ui import properties_data_modifier, properties_data_shaderfx
 
 ModifierButtonsPanel = properties_data_modifier.ModifierButtonsPanel
 ModifierAddMenu = properties_data_modifier.ModifierAddMenu
+
 
 
 def fetch_user_preferences(attr_id=None):
@@ -307,7 +308,6 @@ class OBJECT_MT_gpencil_modifier_add(Menu):
             label, op_icon = cls.GPENCIL_MODIFIER_DATA[op_type]
             col.operator("object.gpencil_modifier_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
 
-
     def draw(self, _context):
         layout = self.layout
         layout = layout.row()
@@ -322,6 +322,61 @@ class OBJECT_MT_gpencil_modifier_add(Menu):
             types=('GP_COLOR', 'GP_OPACITY', 'GP_TINT'))
 
 
+class DATA_PT_shader_fx(Panel):
+    bl_label = "Effects"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "shaderfx"
+    bl_options = {'HIDE_HEADER'}
+
+    def draw(self, _context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+        gpencil_menu_label = "Add Effect"
+        menu_idname = "OBJECT_MT_gpencil_shaderfx_add"
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu(menu_idname, text=gpencil_menu_label)
+        elif prefs.display_as == "BUTTON":
+            layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = menu_idname
+
+        layout.template_shaderfx()
+
+
+class OBJECT_MT_gpencil_shaderfx_add(Menu):
+    bl_label = ""
+    bl_options = {'SEARCH_ON_KEY_PRESS'}
+
+    GPENCIL_SHADERFX_DATA = {
+        enum_it.identifier: (enum_it.name, enum_it.icon)
+            for enum_it in bpy.types.ShaderFx.bl_rna.properties["type"].enum_items_static
+        }
+
+    GPENCIL_SHADERFX_TYPES_I18N_CONTEXT = bpy.types.ShaderFx.bl_rna.properties["type"].translation_context
+
+    @classmethod
+    def poll(cls, context):
+        ob = context.object
+        return ob and ob.type == 'GPENCIL'
+
+    @classmethod
+    def draw_operator_column(cls, layout, header, types, icon='NONE'):
+        col = layout.column()
+        text_ctxt = cls.GPENCIL_SHADERFX_TYPES_I18N_CONTEXT
+
+        col.label(text=header, icon=icon)
+        col.separator()
+        for op_type in types:
+            label, op_icon = cls.GPENCIL_SHADERFX_DATA[op_type]
+            col.operator("object.shaderfx_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+
+    def draw(self, _context):
+        layout = self.layout
+        layout = layout.row()
+
+        self.draw_operator_column(layout, header="Add Effect", icon='SHADERFX',
+            types=('FX_BLUR', 'FX_COLORIZE', 'FX_FLIP', 'FX_GLOW', 'FX_PIXEL', 'FX_RIM', 'FX_SHADOW', 'FX_SWIRL', 'FX_WAVE'))
+
 
 overriding_classes = (
     DATA_PT_modifiers,
@@ -331,6 +386,7 @@ overriding_classes = (
     OBJECT_MT_modifier_add_deform,
     OBJECT_MT_modifier_add_physics,
     DATA_PT_gpencil_modifiers,
+    DATA_PT_shader_fx,
 )
 
 created_classes = (
@@ -340,6 +396,7 @@ created_classes = (
     OBJECT_MT_modifier_add_deform_assets,
     OBJECT_MT_modifier_add_physics_assets,
     OBJECT_MT_gpencil_modifier_add,
+    OBJECT_MT_gpencil_shaderfx_add,
 )
 
 original_class_dict = {
@@ -350,6 +407,7 @@ original_class_dict = {
     "OBJECT_MT_modifier_add_deform" : properties_data_modifier.OBJECT_MT_modifier_add_deform,
     "OBJECT_MT_modifier_add_physics" : properties_data_modifier.OBJECT_MT_modifier_add_physics,
     "DATA_PT_gpencil_modifiers" : properties_data_modifier.DATA_PT_gpencil_modifiers,
+    "DATA_PT_shader_fx" : properties_data_shaderfx.DATA_PT_shader_fx,
 }
 
 
