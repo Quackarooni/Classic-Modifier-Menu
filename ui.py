@@ -342,6 +342,16 @@ created_classes = (
     OBJECT_MT_gpencil_modifier_add,
 )
 
+original_class_dict = {
+    "DATA_PT_modifiers" : properties_data_modifier.DATA_PT_modifiers,
+    "OBJECT_MT_modifier_add" : properties_data_modifier.OBJECT_MT_modifier_add,
+    "OBJECT_MT_modifier_add_edit" : properties_data_modifier.OBJECT_MT_modifier_add_edit,
+    "OBJECT_MT_modifier_add_generate" : properties_data_modifier.OBJECT_MT_modifier_add_generate,
+    "OBJECT_MT_modifier_add_deform" : properties_data_modifier.OBJECT_MT_modifier_add_deform,
+    "OBJECT_MT_modifier_add_physics" : properties_data_modifier.OBJECT_MT_modifier_add_physics,
+    "DATA_PT_gpencil_modifiers" : properties_data_modifier.DATA_PT_gpencil_modifiers,
+}
+
 
 def register():
     for cls in overriding_classes:
@@ -352,7 +362,7 @@ def register():
 
 def unregister():
     for cls in overriding_classes:
-        bpy.utils.register_class(getattr(properties_data_modifier, cls.__name__))
+        bpy.utils.register_class(original_class_dict[cls.__name__])
 
     for cls in created_classes:
         bpy.utils.unregister_class(cls)
