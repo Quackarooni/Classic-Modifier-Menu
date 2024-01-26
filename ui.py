@@ -435,6 +435,62 @@ class BONE_MT_constraint_add(Menu):
             types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
 
 
+class OBJECT_PT_constraints(ObjectConstraintPanel, Panel):
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_label = "Object Constraints"
+    bl_options = {'HIDE_HEADER'}
+        
+    def draw(self, _context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+        menu_label = "Add Object Constraint"
+        menu_idname = "OBJECT_MT_constraint_add"
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu(menu_idname, text=menu_label)
+        elif prefs.display_as == "BUTTON":
+            layout.operator("wm.call_menu", text=menu_label, icon='ADD').name = menu_idname
+
+        layout.template_constraints(use_bone_constraints=False)
+
+
+class OBJECT_MT_constraint_add(Menu):
+    bl_label = ""
+    bl_options = {'SEARCH_ON_KEY_PRESS'}
+
+    OPERATOR_DATA = {
+        enum_it.identifier: (enum_it.name, enum_it.icon)
+            for enum_it in bpy.types.Constraint.bl_rna.properties["type"].enum_items_static
+        }
+
+    TRANSLATION_CONTEXT = bpy.types.Constraint.bl_rna.properties["type"].translation_context
+
+    @classmethod
+    def draw_operator_column(cls, layout, header, types, icon='NONE'):
+        col = layout.column()
+        text_ctxt = cls.TRANSLATION_CONTEXT
+
+        col.label(text=header, icon=icon)
+        col.separator()
+        for op_type in types:
+            label, op_icon = cls.OPERATOR_DATA[op_type]
+            col.operator("object.constraint_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+
+    def draw(self, _context):
+        layout = self.layout
+        layout = layout.row()
+
+        self.draw_operator_column(layout, header="Motion Tracking", icon='TRACKING',
+            types=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER'))
+        self.draw_operator_column(layout, header="Transform", icon='OBJECT_HIDDEN',
+            types=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE'))
+        self.draw_operator_column(layout, header="Tracking", icon='TRACKER',
+            types=('CLAMP_TO', 'DAMPED_TRACK', 'LOCKED_TRACK', 'STRETCH_TO', 'TRACK_TO'))
+        self.draw_operator_column(layout, header="Relationship", icon='DRIVER',
+            types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
+
+
 overriding_classes = (
     DATA_PT_modifiers,
     OBJECT_MT_modifier_add,
@@ -445,6 +501,7 @@ overriding_classes = (
     DATA_PT_gpencil_modifiers,
     DATA_PT_shader_fx,
     BONE_PT_constraints,
+    OBJECT_PT_constraints,
 )
 
 created_classes = (
@@ -456,6 +513,7 @@ created_classes = (
     OBJECT_MT_gpencil_modifier_add,
     OBJECT_MT_gpencil_shaderfx_add,
     BONE_MT_constraint_add,
+    OBJECT_MT_constraint_add,
 )
 
 original_class_dict = {
@@ -467,7 +525,8 @@ original_class_dict = {
     "OBJECT_MT_modifier_add_physics" : properties_data_modifier.OBJECT_MT_modifier_add_physics,
     "DATA_PT_gpencil_modifiers" : properties_data_modifier.DATA_PT_gpencil_modifiers,
     "DATA_PT_shader_fx" : properties_data_shaderfx.DATA_PT_shader_fx,
-    "BONE_PT_constraints" : properties_constraint.BONE_PT_constraints
+    "BONE_PT_constraints" : properties_constraint.BONE_PT_constraints,
+    "OBJECT_PT_constraints" : properties_constraint.OBJECT_PT_constraints
 }
 
 
