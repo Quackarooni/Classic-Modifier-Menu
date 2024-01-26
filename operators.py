@@ -1,6 +1,6 @@
 import bpy
 from bpy.types import Operator
-from .ui import OBJECT_MT_modifier_add_assets
+from .ui import OBJECT_MT_modifier_add_assets, OBJECT_MT_gpencil_modifier_add
 
 
 class InvokeMenuBaseClass:
@@ -39,9 +39,17 @@ class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
 
         return is_modifier and obj and obj.type != 'GPENCIL'
 
+
+class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
+    bl_idname = "object.invoke_add_gpencil_modifier_menu"
+    bl_label = "Add Modifier"
+    menu_id = OBJECT_MT_gpencil_modifier_add.__name__
+
+
 classes = (
     INVOKE_OT_CLASSIC_MODIFIER_MENU,
     INVOKE_OT_ASSET_MODIFIER_MENU,
+    INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU,
 )
 
 
