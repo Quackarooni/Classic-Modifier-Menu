@@ -5,7 +5,6 @@ from bl_ui import properties_data_modifier
 
 ModifierButtonsPanel = properties_data_modifier.ModifierButtonsPanel
 ModifierAddMenu = properties_data_modifier.ModifierAddMenu
-ModifierAddMenu = properties_data_modifier.ModifierAddMenu
 
 
 def fetch_user_preferences(attr_id=None):
