@@ -263,6 +263,67 @@ class OBJECT_MT_modifier_add_physics_assets(ModifierAssetMenu, ModifierAddMenu, 
     bl_label = OBJECT_MT_modifier_add_physics.bl_label
 
 
+class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
+    bl_label = "Modifiers"
+
+    @classmethod
+    def poll(cls, context):
+        ob = context.object
+        return ob and ob.type == 'GPENCIL'
+
+    def draw(self, _context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+        gpencil_menu_label = "Add Modifier"
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu("OBJECT_MT_gpencil_modifier_add", text=gpencil_menu_label)
+        elif prefs.display_as == "BUTTON":
+            layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = "OBJECT_MT_gpencil_modifier_add"
+
+
+class OBJECT_MT_gpencil_modifier_add(Menu):
+    bl_label = ""
+
+    GPENCIL_MODIFIER_DATA = {
+        enum_it.identifier: (enum_it.name, enum_it.icon)
+            for enum_it in bpy.types.GpencilModifier.bl_rna.properties["type"].enum_items_static
+        }
+
+    GPENCIL_MODIFIER_TYPES_I18N_CONTEXT = bpy.types.GpencilModifier.bl_rna.properties["type"].translation_context
+
+    @classmethod
+    def poll(cls, context):
+        ob = context.object
+        return ob and ob.type == 'GPENCIL'
+
+    @classmethod
+    def draw_operator_column(cls, layout, header, types):
+        col = layout.column()
+        text_ctxt = cls.GPENCIL_MODIFIER_TYPES_I18N_CONTEXT
+
+        col.label(text=header)
+        col.separator()
+        for op_type in types:
+            label, icon = cls.GPENCIL_MODIFIER_DATA[op_type]
+            col.operator("object.gpencil_modifier_add", text=label, icon=icon, text_ctxt=text_ctxt).type = op_type
+
+
+    def draw(self, _context):
+        layout = self.layout
+        layout = layout.row()
+
+        self.draw_operator_column(layout, header="Modify", 
+            types=('GP_TEXTURE', 'GP_TIME', 'GP_WEIGHT_ANGLE', 'GP_WEIGHT_PROXIMITY'))
+        self.draw_operator_column(layout, header="Generate", 
+            types=('GP_ARRAY', 'GP_BUILD', 'GP_DASH', 'GP_ENVELOPE', 'GP_LENGTH', 'GP_LINEART', 'GP_MIRROR', 'GP_MULTIPLY', 'GP_OUTLINE', 'GP_SIMPLIFY', 'GP_SUBDIV'))
+        self.draw_operator_column(layout, header="Deform", 
+            types=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK'))
+        self.draw_operator_column(layout, header="Color", 
+            types=('GP_COLOR', 'GP_OPACITY', 'GP_TINT'))
+
+
+
 overriding_classes = (
     DATA_PT_modifiers,
     OBJECT_MT_modifier_add,
@@ -270,6 +331,7 @@ overriding_classes = (
     OBJECT_MT_modifier_add_generate,
     OBJECT_MT_modifier_add_deform,
     OBJECT_MT_modifier_add_physics,
+    DATA_PT_gpencil_modifiers,
 )
 
 created_classes = (
@@ -278,6 +340,7 @@ created_classes = (
     OBJECT_MT_modifier_add_generate_assets,
     OBJECT_MT_modifier_add_deform_assets,
     OBJECT_MT_modifier_add_physics_assets,
+    OBJECT_MT_gpencil_modifier_add,
 )
 
 
