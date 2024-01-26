@@ -281,6 +281,8 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
         elif prefs.display_as == "BUTTON":
             layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = "OBJECT_MT_gpencil_modifier_add"
 
+        layout.template_grease_pencil_modifiers()
+
 
 class OBJECT_MT_gpencil_modifier_add(Menu):
     bl_label = ""
