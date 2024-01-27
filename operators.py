@@ -68,7 +68,7 @@ class INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU(InvokeMenuBaseClass, Operator):
 
 
 class INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
-    bl_idname = "object.invoke_add_bone_constraints_menu"
+    bl_idname = "pose.invoke_add_constraints_menu"
     bl_label = "Add Bone Constraint"
     menu_id = "BONE_MT_constraint_add"
     space_context = 'BONE_CONSTRAINT'
