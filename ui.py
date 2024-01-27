@@ -47,9 +47,9 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
                 sublayout.menu("OBJECT_MT_modifier_add_assets", text=asset_label)
                 
         elif prefs.display_as == "BUTTON":
-            sublayout.operator("wm.call_menu", text=modifier_label, icon='ADD').name = "OBJECT_MT_modifier_add"
+            sublayout.operator("object.invoke_classic_modifier_menu", text=modifier_label, icon='ADD')
             if prefs.show_assets:
-                sublayout.operator("wm.call_menu", text=asset_label, icon='ADD').name = "OBJECT_MT_modifier_add_assets"
+                sublayout.operator("object.invoke_asset_modifier_menu", text=asset_label, icon='ADD')
 
         layout.template_modifiers()
 
@@ -276,13 +276,11 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
     def draw(self, _context):
         layout = self.layout
         prefs = fetch_user_preferences()
-        gpencil_menu_label = "Add Modifier"
-        menu_idname = "OBJECT_MT_gpencil_modifier_add"
 
         if prefs.display_as == "DROPDOWN":
-            layout.menu(menu_idname, text=gpencil_menu_label)
+            layout.menu("OBJECT_MT_gpencil_modifier_add", text="Add Modifier")
         elif prefs.display_as == "BUTTON":
-            layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = menu_idname
+            layout.operator("object.invoke_add_gpencil_modifier_menu", icon='ADD')
 
         layout.template_grease_pencil_modifiers()
 
@@ -333,13 +331,11 @@ class DATA_PT_shader_fx(Panel):
     def draw(self, _context):
         layout = self.layout
         prefs = fetch_user_preferences()
-        gpencil_menu_label = "Add Effect"
-        menu_idname = "OBJECT_MT_gpencil_shaderfx_add"
 
         if prefs.display_as == "DROPDOWN":
-            layout.menu(menu_idname, text=gpencil_menu_label)
+            layout.menu("OBJECT_MT_gpencil_shaderfx_add", text="Add Effect")
         elif prefs.display_as == "BUTTON":
-            layout.operator("wm.call_menu", text=gpencil_menu_label, icon='ADD').name = menu_idname
+            layout.operator("object.invoke_add_gpencil_shaderfx_menu", icon='ADD')
 
         layout.template_shaderfx()
 
@@ -388,13 +384,11 @@ class BONE_PT_constraints(BoneConstraintPanel, Panel):
     def draw(self, _context):
         layout = self.layout
         prefs = fetch_user_preferences()
-        menu_label = "Add Bone Constraint"
-        menu_idname = "BONE_MT_constraint_add"
 
         if prefs.display_as == "DROPDOWN":
-            layout.menu(menu_idname, text=menu_label)
+            layout.menu("BONE_MT_constraint_add", text="Add Bone Constraint")
         elif prefs.display_as == "BUTTON":
-            layout.operator("wm.call_menu", text=menu_label, icon='ADD').name = menu_idname
+            layout.operator("pose.invoke_add_constraints_menu", icon='ADD')
 
         layout.template_constraints(use_bone_constraints=True)
 
@@ -444,13 +438,11 @@ class OBJECT_PT_constraints(ObjectConstraintPanel, Panel):
     def draw(self, _context):
         layout = self.layout
         prefs = fetch_user_preferences()
-        menu_label = "Add Object Constraint"
-        menu_idname = "OBJECT_MT_constraint_add"
 
         if prefs.display_as == "DROPDOWN":
-            layout.menu(menu_idname, text=menu_label)
+            layout.menu("OBJECT_MT_constraint_add", text="Add Object Constraint")
         elif prefs.display_as == "BUTTON":
-            layout.operator("wm.call_menu", text=menu_label, icon='ADD').name = menu_idname
+            layout.operator("object.invoke_add_constraints_menu", icon='ADD')
 
         layout.template_constraints(use_bone_constraints=False)
 
