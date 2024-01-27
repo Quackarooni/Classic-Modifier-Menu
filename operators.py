@@ -8,7 +8,7 @@ class InvokeMenuBaseClass:
     def poll(cls, context):
         # NOTE: This operator only exists to add a poll to the add modifier shortcut in the property editor.
         space = context.space_data
-        return space and space.type == 'PROPERTIES' and space.context == 'MODIFIER'
+        return space and space.type == 'PROPERTIES' and space.context == cls.space_context
 
     def invoke(self, context, event):
         return bpy.ops.wm.call_menu(name=self.menu_id)
@@ -18,6 +18,7 @@ class INVOKE_OT_CLASSIC_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_classic_modifier_menu"
     bl_label = "Add Modifier"
     menu_id = "OBJECT_MT_modifier_add"
+    space_context = 'MODIFIER'
 
     @classmethod
     def poll(cls, context):
@@ -31,6 +32,7 @@ class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_asset_modifier_menu"
     bl_label = "Add Asset Modifier"
     menu_id = OBJECT_MT_modifier_add_assets.__name__
+    space_context = 'MODIFIER'
 
     @classmethod
     def poll(cls, context):
@@ -44,6 +46,7 @@ class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_add_gpencil_modifier_menu"
     bl_label = "Add Modifier"
     menu_id = OBJECT_MT_gpencil_modifier_add.__name__
+    space_context = 'MODIFIER'
 
 
 classes = (
