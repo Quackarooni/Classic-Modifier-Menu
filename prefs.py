@@ -1,7 +1,7 @@
 import bpy
 from bpy.props import BoolProperty, EnumProperty, StringProperty
 from . import keymap_ui
-from .ui import fetch_user_preferences
+from .utils import fetch_user_preferences
 
 class ClassicModifierPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__

@@ -2,20 +2,12 @@ import bpy
 from bpy.types import Panel, Menu
 
 from bl_ui import properties_data_modifier, properties_data_shaderfx, properties_constraint
+from .utils import fetch_user_preferences
 
 ModifierButtonsPanel = properties_data_modifier.ModifierButtonsPanel
 ModifierAddMenu = properties_data_modifier.ModifierAddMenu
 ObjectConstraintPanel = properties_constraint.ObjectConstraintPanel
 BoneConstraintPanel = properties_constraint.BoneConstraintPanel
-
-
-def fetch_user_preferences(attr_id=None):
-    prefs = bpy.context.preferences.addons[__package__].preferences
-
-    if attr_id is None:
-        return prefs
-    else:
-        return getattr(prefs, attr_id)
 
 
 class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
