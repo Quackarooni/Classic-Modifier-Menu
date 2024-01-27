@@ -327,7 +327,7 @@ class DATA_PT_shader_fx(Panel):
         if prefs.display_as == "DROPDOWN":
             layout.menu("OBJECT_MT_gpencil_shaderfx_add", text="Add Effect")
         elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_gpencil_shaderfx_menu", icon='ADD')
+            layout.operator("object.invoke_add_gpencil_shaderfx_menu", text="Add Effect", icon='ADD')
 
         layout.template_shaderfx()
 

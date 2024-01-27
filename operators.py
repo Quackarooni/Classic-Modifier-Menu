@@ -59,7 +59,7 @@ class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
 
 class INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_add_gpencil_shaderfx_menu"
-    bl_label = "Add Effect"
+    bl_label = "Add Grease Pencil Effect"
     menu_id = "OBJECT_MT_gpencil_shaderfx_add"
     space_context = 'SHADERFX'
 
