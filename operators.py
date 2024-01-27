@@ -48,6 +48,14 @@ class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     menu_id = OBJECT_MT_gpencil_modifier_add.__name__
     space_context = 'MODIFIER'
 
+    @classmethod
+    def poll(cls, context):
+        is_modifier = super().poll(context)
+        obj = context.active_object
+
+        return is_modifier and obj and obj.type == 'GPENCIL'
+
+
 
 classes = (
     INVOKE_OT_CLASSIC_MODIFIER_MENU,
