@@ -48,6 +48,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
 
 class OBJECT_MT_modifier_add(ModifierAddMenu, Menu):
     bl_label = ""
+    bl_description = "Add a procedural operation/effect to the active object"
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     @staticmethod
@@ -216,6 +217,7 @@ class OBJECT_MT_modifier_add_physics(ModifierAddMenu, Menu):
 
 class OBJECT_MT_modifier_add_assets(ModifierAddMenu, Menu):
     bl_label = "Assets"
+    bl_description = "Add a modifier nodegroup to the active object"
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     def draw(self, context):
@@ -279,6 +281,7 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
 
 class OBJECT_MT_gpencil_modifier_add(Menu):
     bl_label = ""
+    bl_description = "Add a procedural operation/effect to the active grease pencil object"
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     GPENCIL_MODIFIER_DATA = {
@@ -334,6 +337,7 @@ class DATA_PT_shader_fx(Panel):
 
 class OBJECT_MT_gpencil_shaderfx_add(Menu):
     bl_label = ""
+    bl_description = "Add a visual effect to the active grease pencil object"
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     GPENCIL_SHADERFX_DATA = {
@@ -387,6 +391,7 @@ class BONE_PT_constraints(BoneConstraintPanel, Panel):
 
 class BONE_MT_constraint_add(Menu):
     bl_label = ""
+    bl_description = "Add a constraint to the active bone"
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     OPERATOR_DATA = {
@@ -441,6 +446,7 @@ class OBJECT_PT_constraints(ObjectConstraintPanel, Panel):
 
 class OBJECT_MT_constraint_add(Menu):
     bl_label = ""
+    bl_description = "Add a constraint to the active object"
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     OPERATOR_DATA = {
