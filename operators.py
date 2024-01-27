@@ -22,10 +22,10 @@ class INVOKE_OT_CLASSIC_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
 
     @classmethod
     def poll(cls, context):
-        is_modifier = super().poll(context)
+        is_space_valid = super().poll(context)
         obj = context.active_object
 
-        return is_modifier and obj and obj.type != 'GPENCIL'
+        return is_space_valid and obj and obj.type != 'GPENCIL'
 
 
 class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
@@ -36,10 +36,10 @@ class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
 
     @classmethod
     def poll(cls, context):
-        is_modifier = super().poll(context)
+        is_space_valid = super().poll(context)
         obj = context.active_object
 
-        return is_modifier and obj and obj.type != 'GPENCIL'
+        return is_space_valid and obj and obj.type != 'GPENCIL'
 
 
 class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
@@ -50,10 +50,10 @@ class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
 
     @classmethod
     def poll(cls, context):
-        is_modifier = super().poll(context)
+        is_space_valid = super().poll(context)
         obj = context.active_object
 
-        return is_modifier and obj and obj.type == 'GPENCIL'
+        return is_space_valid and obj and obj.type == 'GPENCIL'
 
 
 
