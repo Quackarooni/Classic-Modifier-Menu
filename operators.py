@@ -66,7 +66,14 @@ class INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU(InvokeMenuBaseClass, Operator):
 
     # Poll function isn't extended because currently
     # only grease pencil objects have the space context 'SHADERFX'
-    
+
+
+class INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
+    bl_idname = "object.invoke_add_bone_constraints_menu"
+    bl_label = "Add Bone Constraint"
+    menu_id = "BONE_MT_constraint_add"
+    space_context = 'BONE_CONSTRAINT'
+
 
 
 classes = (
@@ -74,6 +81,7 @@ classes = (
     INVOKE_OT_ASSET_MODIFIER_MENU,
     INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU,
     INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU,
+    INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU,
 )
 
 
