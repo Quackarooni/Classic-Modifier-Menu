@@ -4,6 +4,8 @@ from .ui import OBJECT_MT_modifier_add_assets, OBJECT_MT_gpencil_modifier_add
 
 
 class InvokeMenuBaseClass:
+    bl_options = {'INTERNAL'}
+
     @classmethod
     def poll(cls, context):
         # NOTE: This operator only exists to add a poll to the add modifier shortcut in the property editor.
