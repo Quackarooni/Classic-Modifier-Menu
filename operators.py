@@ -45,7 +45,7 @@ class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
 
 class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_add_gpencil_modifier_menu"
-    bl_label = "Add Modifier"
+    bl_label = "Add Grease Pencil Modifier"
     menu_id = "OBJECT_MT_gpencil_modifier_add"
     space_context = 'MODIFIER'
 

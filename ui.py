@@ -272,7 +272,7 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
         if prefs.display_as == "DROPDOWN":
             layout.menu("OBJECT_MT_gpencil_modifier_add", text="Add Modifier")
         elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_gpencil_modifier_menu", icon='ADD')
+            layout.operator("object.invoke_add_gpencil_modifier_menu", text="Add Modifier", icon='ADD')
 
         layout.template_grease_pencil_modifiers()
 
