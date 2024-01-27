@@ -1,11 +1,18 @@
 import bpy
-from .operators import INVOKE_OT_CLASSIC_MODIFIER_MENU, INVOKE_OT_ASSET_MODIFIER_MENU, INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU
+from .operators import (
+    INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU, 
+    INVOKE_OT_CLASSIC_MODIFIER_MENU, 
+    INVOKE_OT_ASSET_MODIFIER_MENU, 
+    INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU, 
+    INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU
+    )
 
 addon_keymaps = []
 keymap_defs = (
     (INVOKE_OT_CLASSIC_MODIFIER_MENU.bl_idname, 'A', True, None),
     (INVOKE_OT_ASSET_MODIFIER_MENU.bl_idname, 'NONE', False, None),
     (INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU.bl_idname, 'A', True, None),
+    (INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU.bl_idname, 'A', True, None),
 )
 
 def register():
