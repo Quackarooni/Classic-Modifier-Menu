@@ -74,8 +74,8 @@ class INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
     space_context = 'BONE_CONSTRAINT'
 
 
-class INVOKE_OT_ADD_OBJECT_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
-    bl_idname = "object.invoke_add_object_constraints_menu"
+class INVOKE_OT_ADD_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
+    bl_idname = "object.invoke_add_constraints_menu"
     bl_label = "Add Object Constraint"
     menu_id = "OBJECT_MT_constraint_add"
     space_context = 'CONSTRAINT'
@@ -87,7 +87,7 @@ classes = (
     INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU,
     INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU,
     INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU,
-    INVOKE_OT_ADD_OBJECT_CONSTRAINTS_MENU
+    INVOKE_OT_ADD_CONSTRAINTS_MENU
 )
 
 
