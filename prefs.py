@@ -1,7 +1,10 @@
 import bpy
 from bpy.props import BoolProperty, EnumProperty, StringProperty
+
 from . import keymap_ui
 from .utils import fetch_user_preferences
+from .ui import toggle_input_mode
+
 
 class ClassicModifierPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
@@ -85,7 +88,8 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
             'UNDERLINE', 1),
         ),
         default='TYPE_TO_SEARCH',
-        description="Specifies how menus process incoming user input"
+        description="Specifies how menus process incoming user input",
+        update=toggle_input_mode
     )
 
     def draw_prop_newline(self, layout, prop_name):

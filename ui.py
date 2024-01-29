@@ -10,6 +10,10 @@ ObjectConstraintPanel = properties_constraint.ObjectConstraintPanel
 BoneConstraintPanel = properties_constraint.BoneConstraintPanel
 
 
+class SearchToTypeMenu:
+    bl_options = {'SEARCH_ON_KEY_PRESS'}
+
+
 class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
     bl_label = "Modifiers"
     bl_space_type = 'PROPERTIES'
@@ -49,7 +53,6 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
 class OBJECT_MT_modifier_add(ModifierAddMenu, Menu):
     bl_label = ""
     bl_description = "Add a procedural operation/effect to the active object"
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     @staticmethod
     def draw_column(layout, header, menu_name, icon):
@@ -215,10 +218,9 @@ class OBJECT_MT_modifier_add_physics(ModifierAddMenu, Menu):
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
 
 
-class OBJECT_MT_modifier_add_assets(ModifierAddMenu, Menu):
+class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
     bl_label = "Assets"
     bl_description = "Add a modifier nodegroup to the active object"
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     def draw(self, context):
         layout = self.layout
@@ -344,9 +346,8 @@ class OBJECT_PT_constraints(DropdownPanelBaseclass, Panel):
         layout.template_constraints(use_bone_constraints=False)
 
 
-class FlatMenuBaseclass:
+class FlatMenuBaseclass(SearchToTypeMenu):
     bl_label = ""
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     @classmethod
     def draw_operator_column(cls, layout, header, types, icon='NONE'):
@@ -435,6 +436,34 @@ class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
             types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
 
 
+def reload_menus():
+    menus = (
+        OBJECT_MT_gpencil_modifier_add, 
+        OBJECT_MT_gpencil_shaderfx_add, 
+        BONE_MT_constraint_add, 
+        OBJECT_MT_constraint_add,
+        OBJECT_MT_modifier_add,
+        OBJECT_MT_modifier_add_assets
+        )
+
+    for menu in menus:
+        bpy.utils.unregister_class(menu)
+        bpy.utils.register_class(menu)
+
+
+def toggle_input_mode(self, context):
+    if self.input_mode == 'TYPE_TO_SEARCH':
+        if not hasattr(SearchToTypeMenu, "bl_options"):
+            SearchToTypeMenu.bl_options = {'SEARCH_ON_KEY_PRESS'}
+            reload_menus()
+    elif self.input_mode == 'ACCELERATOR_KEYS':
+        if hasattr(SearchToTypeMenu, "bl_options"):
+            delattr(SearchToTypeMenu, "bl_options")
+        reload_menus()
+    else:
+        raise ValueError(f"'{self.input_mode}' is an unsupported value for {self}")
+
+
 overriding_classes = (
     DATA_PT_modifiers,
     OBJECT_MT_modifier_add,
@@ -488,3 +517,5 @@ def unregister():
 
     for cls in created_classes:
         bpy.utils.unregister_class(cls)
+
+    SearchToTypeMenu.bl_options = {'SEARCH_ON_KEY_PRESS'}
