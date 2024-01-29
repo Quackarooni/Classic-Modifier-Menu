@@ -259,78 +259,88 @@ class OBJECT_MT_modifier_add_physics_assets(ModifierAssetMenu, ModifierAddMenu, 
     bl_label = OBJECT_MT_modifier_add_physics.bl_label
 
 
-class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
+class DropdownPanelBaseclass:
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_options = {'HIDE_HEADER'}
+
+    def draw(self, context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu(self.menu_id, text=self.label)
+        elif prefs.display_as == "BUTTON":
+            layout.operator(self.op_id, text=self.label, icon='ADD')
+
+        self.post_draw(layout)
+
+    def post_draw(layout):
+        ...
+        
+
+class DATA_PT_gpencil_modifiers(DropdownPanelBaseclass, Panel):
     bl_label = "Modifiers"
+    bl_context = "modifier"
+
+    menu_id = "OBJECT_MT_gpencil_modifier_add"
+    op_id = "object.invoke_add_gpencil_modifier_menu"
+    label = "Add Modifier"
 
     @classmethod
     def poll(cls, context):
         ob = context.object
         return ob and ob.type == 'GPENCIL'
 
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
-
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("OBJECT_MT_gpencil_modifier_add", text="Add Modifier")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_gpencil_modifier_menu", text="Add Modifier", icon='ADD')
-
+    @staticmethod
+    def post_draw(layout):
         layout.template_grease_pencil_modifiers()
+    
 
-
-class DATA_PT_shader_fx(Panel):
+class DATA_PT_shader_fx(DropdownPanelBaseclass, Panel):
     bl_label = "Effects"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
     bl_context = "shaderfx"
-    bl_options = {'HIDE_HEADER'}
 
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
+    menu_id = "OBJECT_MT_gpencil_shaderfx_add"
+    op_id = "object.invoke_add_gpencil_shaderfx_menu"
+    label = "Add Effect"
 
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("OBJECT_MT_gpencil_shaderfx_add", text="Add Effect")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_gpencil_shaderfx_menu", text="Add Effect", icon='ADD')
-
+    @staticmethod
+    def post_draw(layout):
         layout.template_shaderfx()
 
 
-class BONE_PT_constraints(BoneConstraintPanel, Panel):
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
+class BONE_PT_constraints(DropdownPanelBaseclass, Panel):
     bl_label = "Bone Constraints"
-    bl_options = {'HIDE_HEADER'}
-        
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
+    bl_context = "bone_constraint"
 
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("BONE_MT_constraint_add", text="Add Bone Constraint")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("pose.invoke_add_constraints_menu", icon='ADD')
+    menu_id = "BONE_MT_constraint_add"
+    op_id = "pose.invoke_add_constraints_menu"
+    label = "Add Bone Constraint"
 
+    @classmethod
+    def poll(cls, context):
+        return (context.object)
+
+    @staticmethod
+    def post_draw(layout):
         layout.template_constraints(use_bone_constraints=True)
 
 
-class OBJECT_PT_constraints(ObjectConstraintPanel, Panel):
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
+class OBJECT_PT_constraints(DropdownPanelBaseclass, Panel):
     bl_label = "Object Constraints"
-    bl_options = {'HIDE_HEADER'}
+    bl_context = "constraint"
+
+    menu_id = "OBJECT_MT_constraint_add"
+    op_id = "object.invoke_add_constraints_menu"
+    label = "Add Object Constraint"
+
+    @classmethod
+    def poll(cls, context):
+        return (context.object)
         
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
-
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("OBJECT_MT_constraint_add", text="Add Object Constraint")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_constraints_menu", icon='ADD')
-
+    @staticmethod
+    def post_draw(layout):
         layout.template_constraints(use_bone_constraints=False)
 
 
