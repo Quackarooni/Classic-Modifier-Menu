@@ -79,7 +79,7 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
             ("TYPE_TO_SEARCH", "Type to Search", "Typing while a menu is switches in a searchbar containing your input", 'VIEWZOOM', 0),
             ("ACCELERATOR_KEYS", "Accelerator Keys", 
             """
-            Menu options will have one of their letters underlined, and pressing a key will select its corresponding menu option.
+            Pressing a key will jump to an option that has that same key underlined.
             Search can still be triggered if spacebar is pressed when the menu is opened
             """, 
             'UNDERLINE', 1),
