@@ -344,32 +344,44 @@ class OBJECT_PT_constraints(DropdownPanelBaseclass, Panel):
         layout.template_constraints(use_bone_constraints=False)
 
 
-class OBJECT_MT_gpencil_modifier_add(Menu):
-    bl_label = ""
-    bl_description = "Add a procedural operation/effect to the active grease pencil object"
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
+def fetch_op_data(class_name):
+    type_class = getattr(bpy.types, class_name)
+    type_props = type_class.bl_rna.properties["type"]
 
-    GPENCIL_MODIFIER_DATA = {
+    OPERATOR_DATA = {
         enum_it.identifier: (enum_it.name, enum_it.icon)
-            for enum_it in bpy.types.GpencilModifier.bl_rna.properties["type"].enum_items_static
+            for enum_it in type_props.enum_items_static
         }
 
-    GPENCIL_MODIFIER_TYPES_I18N_CONTEXT = bpy.types.GpencilModifier.bl_rna.properties["type"].translation_context
+    TRANSLATION_CONTEXT = type_props.translation_context
+
+    return (OPERATOR_DATA, TRANSLATION_CONTEXT)
+
+
+class FlatMenuBaseclass:
+    bl_label = ""
+    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
     @classmethod
     def draw_operator_column(cls, layout, header, types, icon='NONE'):
         col = layout.column()
-        text_ctxt = cls.GPENCIL_MODIFIER_TYPES_I18N_CONTEXT
+        text_ctxt = cls.TRANSLATION_CONTEXT
 
         col.label(text=header, icon=icon)
         col.separator()
         for op_type in types:
-            label, op_icon = cls.GPENCIL_MODIFIER_DATA[op_type]
-            col.operator("object.gpencil_modifier_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+            label, op_icon = cls.OPERATOR_DATA[op_type]
+            col.operator(cls.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+            
+
+class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
+    bl_description = "Add a procedural operation/effect to the active grease pencil object"
+
+    op_id = "object.gpencil_modifier_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
 
     def draw(self, _context):
-        layout = self.layout
-        layout = layout.row()
+        layout = self.layout.row()
 
         self.draw_operator_column(layout, header="Modify", icon='MODIFIER_DATA',
             types=('GP_TEXTURE', 'GP_TIME', 'GP_WEIGHT_ANGLE', 'GP_WEIGHT_PROXIMITY'))
@@ -381,68 +393,32 @@ class OBJECT_MT_gpencil_modifier_add(Menu):
             types=('GP_COLOR', 'GP_OPACITY', 'GP_TINT'))
 
 
-class OBJECT_MT_gpencil_shaderfx_add(Menu):
-    bl_label = ""
-    bl_description = "Add a visual effect to the active grease pencil object"
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
+class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
+    bl_description = "Add a visual effect to the active grease pencil object"\
 
-    GPENCIL_SHADERFX_DATA = {
-        enum_it.identifier: (enum_it.name, enum_it.icon)
-            for enum_it in bpy.types.ShaderFx.bl_rna.properties["type"].enum_items_static
-        }
-
-    GPENCIL_SHADERFX_TYPES_I18N_CONTEXT = bpy.types.ShaderFx.bl_rna.properties["type"].translation_context
+    op_id = "object.shaderfx_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="ShaderFx")
 
     @classmethod
     def poll(cls, context):
         ob = context.object
         return ob and ob.type == 'GPENCIL'
 
-    @classmethod
-    def draw_operator_column(cls, layout, header, types, icon='NONE'):
-        col = layout.column()
-        text_ctxt = cls.GPENCIL_SHADERFX_TYPES_I18N_CONTEXT
-
-        col.label(text=header, icon=icon)
-        col.separator()
-        for op_type in types:
-            label, op_icon = cls.GPENCIL_SHADERFX_DATA[op_type]
-            col.operator("object.shaderfx_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
-
     def draw(self, _context):
-        layout = self.layout
-        layout = layout.row()
+        layout = self.layout.row()
 
         self.draw_operator_column(layout, header="Add Effect", icon='SHADERFX',
             types=('FX_BLUR', 'FX_COLORIZE', 'FX_FLIP', 'FX_GLOW', 'FX_PIXEL', 'FX_RIM', 'FX_SHADOW', 'FX_SWIRL', 'FX_WAVE'))
 
 
-class BONE_MT_constraint_add(Menu):
-    bl_label = ""
+class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
     bl_description = "Add a constraint to the active bone"
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
-    OPERATOR_DATA = {
-        enum_it.identifier: (enum_it.name, enum_it.icon)
-            for enum_it in bpy.types.Constraint.bl_rna.properties["type"].enum_items_static
-        }
-
-    TRANSLATION_CONTEXT = bpy.types.Constraint.bl_rna.properties["type"].translation_context
-
-    @classmethod
-    def draw_operator_column(cls, layout, header, types, icon='NONE'):
-        col = layout.column()
-        text_ctxt = cls.TRANSLATION_CONTEXT
-
-        col.label(text=header, icon=icon)
-        col.separator()
-        for op_type in types:
-            label, op_icon = cls.OPERATOR_DATA[op_type]
-            col.operator("pose.constraint_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+    op_id = "pose.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
     def draw(self, _context):
-        layout = self.layout
-        layout = layout.row()
+        layout = self.layout.row()
 
         self.draw_operator_column(layout, header="Motion Tracking", icon='TRACKING',
             types=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER'))
@@ -454,32 +430,14 @@ class BONE_MT_constraint_add(Menu):
             types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
 
 
-class OBJECT_MT_constraint_add(Menu):
-    bl_label = ""
+class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
     bl_description = "Add a constraint to the active object"
-    bl_options = {'SEARCH_ON_KEY_PRESS'}
 
-    OPERATOR_DATA = {
-        enum_it.identifier: (enum_it.name, enum_it.icon)
-            for enum_it in bpy.types.Constraint.bl_rna.properties["type"].enum_items_static
-        }
-
-    TRANSLATION_CONTEXT = bpy.types.Constraint.bl_rna.properties["type"].translation_context
-
-    @classmethod
-    def draw_operator_column(cls, layout, header, types, icon='NONE'):
-        col = layout.column()
-        text_ctxt = cls.TRANSLATION_CONTEXT
-
-        col.label(text=header, icon=icon)
-        col.separator()
-        for op_type in types:
-            label, op_icon = cls.OPERATOR_DATA[op_type]
-            col.operator("object.constraint_add", text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+    op_id = "object.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
     def draw(self, _context):
-        layout = self.layout
-        layout = layout.row()
+        layout = self.layout.row()
 
         self.draw_operator_column(layout, header="Motion Tracking", icon='TRACKING',
             types=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER'))
