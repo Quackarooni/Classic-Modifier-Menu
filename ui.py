@@ -279,6 +279,61 @@ class DATA_PT_gpencil_modifiers(ModifierButtonsPanel, Panel):
         layout.template_grease_pencil_modifiers()
 
 
+class DATA_PT_shader_fx(Panel):
+    bl_label = "Effects"
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = "shaderfx"
+    bl_options = {'HIDE_HEADER'}
+
+    def draw(self, _context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu("OBJECT_MT_gpencil_shaderfx_add", text="Add Effect")
+        elif prefs.display_as == "BUTTON":
+            layout.operator("object.invoke_add_gpencil_shaderfx_menu", text="Add Effect", icon='ADD')
+
+        layout.template_shaderfx()
+
+
+class BONE_PT_constraints(BoneConstraintPanel, Panel):
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_label = "Bone Constraints"
+    bl_options = {'HIDE_HEADER'}
+        
+    def draw(self, _context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu("BONE_MT_constraint_add", text="Add Bone Constraint")
+        elif prefs.display_as == "BUTTON":
+            layout.operator("pose.invoke_add_constraints_menu", icon='ADD')
+
+        layout.template_constraints(use_bone_constraints=True)
+
+
+class OBJECT_PT_constraints(ObjectConstraintPanel, Panel):
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_label = "Object Constraints"
+    bl_options = {'HIDE_HEADER'}
+        
+    def draw(self, _context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+
+        if prefs.display_as == "DROPDOWN":
+            layout.menu("OBJECT_MT_constraint_add", text="Add Object Constraint")
+        elif prefs.display_as == "BUTTON":
+            layout.operator("object.invoke_add_constraints_menu", icon='ADD')
+
+        layout.template_constraints(use_bone_constraints=False)
+
+
 class OBJECT_MT_gpencil_modifier_add(Menu):
     bl_label = ""
     bl_description = "Add a procedural operation/effect to the active grease pencil object"
@@ -314,25 +369,6 @@ class OBJECT_MT_gpencil_modifier_add(Menu):
             types=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK'))
         self.draw_operator_column(layout, header="Color", icon='OVERLAY', 
             types=('GP_COLOR', 'GP_OPACITY', 'GP_TINT'))
-
-
-class DATA_PT_shader_fx(Panel):
-    bl_label = "Effects"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = "shaderfx"
-    bl_options = {'HIDE_HEADER'}
-
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
-
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("OBJECT_MT_gpencil_shaderfx_add", text="Add Effect")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_gpencil_shaderfx_menu", text="Add Effect", icon='ADD')
-
-        layout.template_shaderfx()
 
 
 class OBJECT_MT_gpencil_shaderfx_add(Menu):
@@ -371,24 +407,6 @@ class OBJECT_MT_gpencil_shaderfx_add(Menu):
             types=('FX_BLUR', 'FX_COLORIZE', 'FX_FLIP', 'FX_GLOW', 'FX_PIXEL', 'FX_RIM', 'FX_SHADOW', 'FX_SWIRL', 'FX_WAVE'))
 
 
-class BONE_PT_constraints(BoneConstraintPanel, Panel):
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_label = "Bone Constraints"
-    bl_options = {'HIDE_HEADER'}
-        
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
-
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("BONE_MT_constraint_add", text="Add Bone Constraint")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("pose.invoke_add_constraints_menu", icon='ADD')
-
-        layout.template_constraints(use_bone_constraints=True)
-
-
 class BONE_MT_constraint_add(Menu):
     bl_label = ""
     bl_description = "Add a constraint to the active bone"
@@ -424,24 +442,6 @@ class BONE_MT_constraint_add(Menu):
             types=('CLAMP_TO', 'DAMPED_TRACK', 'IK', 'LOCKED_TRACK', 'SPLINE_IK', 'STRETCH_TO', 'TRACK_TO'))
         self.draw_operator_column(layout, header="Relationship", icon='DRIVER',
             types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
-
-
-class OBJECT_PT_constraints(ObjectConstraintPanel, Panel):
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_label = "Object Constraints"
-    bl_options = {'HIDE_HEADER'}
-        
-    def draw(self, _context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
-
-        if prefs.display_as == "DROPDOWN":
-            layout.menu("OBJECT_MT_constraint_add", text="Add Object Constraint")
-        elif prefs.display_as == "BUTTON":
-            layout.operator("object.invoke_add_constraints_menu", icon='ADD')
-
-        layout.template_constraints(use_bone_constraints=False)
 
 
 class OBJECT_MT_constraint_add(Menu):
