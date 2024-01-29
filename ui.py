@@ -2,7 +2,7 @@ import bpy
 from bpy.types import Panel, Menu
 
 from bl_ui import properties_data_modifier, properties_data_shaderfx, properties_constraint
-from .utils import fetch_user_preferences
+from .utils import fetch_user_preferences, fetch_op_data
 
 ModifierButtonsPanel = properties_data_modifier.ModifierButtonsPanel
 ModifierAddMenu = properties_data_modifier.ModifierAddMenu
@@ -344,20 +344,6 @@ class OBJECT_PT_constraints(DropdownPanelBaseclass, Panel):
         layout.template_constraints(use_bone_constraints=False)
 
 
-def fetch_op_data(class_name):
-    type_class = getattr(bpy.types, class_name)
-    type_props = type_class.bl_rna.properties["type"]
-
-    OPERATOR_DATA = {
-        enum_it.identifier: (enum_it.name, enum_it.icon)
-            for enum_it in type_props.enum_items_static
-        }
-
-    TRANSLATION_CONTEXT = type_props.translation_context
-
-    return (OPERATOR_DATA, TRANSLATION_CONTEXT)
-
-
 class FlatMenuBaseclass:
     bl_label = ""
     bl_options = {'SEARCH_ON_KEY_PRESS'}
@@ -494,6 +480,7 @@ def register():
 
     for cls in created_classes:
         bpy.utils.register_class(cls)
+
 
 def unregister():
     for cls in overriding_classes:
