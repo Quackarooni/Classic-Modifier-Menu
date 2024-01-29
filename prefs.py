@@ -73,6 +73,21 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         description="Specifies how assets in catalogs named after built-in categories (Edit, Generate, Deform, Physics), are displayed"
     )
 
+    input_mode: EnumProperty(
+        name="Input Mode",
+        items=(
+            ("TYPE_TO_SEARCH", "Type to Search", "Typing while a menu is switches in a searchbar containing your input", 'VIEWZOOM', 0),
+            ("ACCELERATOR_KEYS", "Accelerator Keys", 
+            """
+            Menu options will have one of their letters underlined, and pressing a key will select its corresponding menu option.
+            Search can still be triggered if spacebar is pressed when the menu is opened
+            """, 
+            'UNDERLINE', 1),
+        ),
+        default='TYPE_TO_SEARCH',
+        description="Specifies how menus process incoming user input"
+    )
+
     def draw_prop_newline(self, layout, prop_name):
         prop_label = self.__annotations__[prop_name].keywords["name"]
         layout.label(text=f"{prop_label}:")
@@ -89,6 +104,7 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         if self.show_assets:
             col1.prop(self, "stacking")
         col1.prop(self, "display_as")
+        col1.prop(self, "input_mode")
         
         row = layout.row()
         col1 = row.column()
