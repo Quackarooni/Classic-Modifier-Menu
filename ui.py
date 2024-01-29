@@ -54,6 +54,11 @@ class OBJECT_MT_modifier_add(ModifierAddMenu, Menu):
     bl_label = ""
     bl_description = "Add a procedural operation/effect to the active object"
 
+    @classmethod
+    def poll(cls, context):
+        ob = context.object
+        return ob and ob.type != 'GPENCIL'
+
     @staticmethod
     def draw_column(layout, header, menu_name, icon):
         header_mode = fetch_user_preferences("modifier_headers")
@@ -366,6 +371,11 @@ class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
 
     op_id = "object.gpencil_modifier_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
+    
+    @classmethod
+    def poll(cls, context):
+        ob = context.object
+        return ob and ob.type == 'GPENCIL'
 
     def draw(self, _context):
         layout = self.layout.row()

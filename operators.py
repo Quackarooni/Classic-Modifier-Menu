@@ -22,13 +22,6 @@ class INVOKE_OT_CLASSIC_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     menu_id = "OBJECT_MT_modifier_add"
     space_context = 'MODIFIER'
 
-    @classmethod
-    def poll(cls, context):
-        is_space_valid = super().poll(context)
-        obj = context.active_object
-
-        return is_space_valid and obj and obj.type != 'GPENCIL'
-
 
 class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_asset_modifier_menu"
@@ -36,13 +29,6 @@ class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     bl_description = "Add a modifier nodegroup to the active object"
     menu_id = "OBJECT_MT_modifier_add_assets"
     space_context = 'MODIFIER'
-
-    @classmethod
-    def poll(cls, context):
-        is_space_valid = super().poll(context)
-        obj = context.active_object
-
-        return is_space_valid and obj and obj.type != 'GPENCIL'
 
 
 class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
@@ -52,13 +38,6 @@ class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     menu_id = "OBJECT_MT_gpencil_modifier_add"
     space_context = 'MODIFIER'
 
-    @classmethod
-    def poll(cls, context):
-        is_space_valid = super().poll(context)
-        obj = context.active_object
-
-        return is_space_valid and obj and obj.type == 'GPENCIL'
-
 
 class INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU(InvokeMenuBaseClass, Operator):
     bl_idname = "object.invoke_add_gpencil_shaderfx_menu"
@@ -66,9 +45,6 @@ class INVOKE_OT_ADD_GPENCIL_SHADERFX_MENU(InvokeMenuBaseClass, Operator):
     bl_description = "Add a visual effect to the active grease pencil object"
     menu_id = "OBJECT_MT_gpencil_shaderfx_add"
     space_context = 'SHADERFX'
-
-    # Poll function isn't extended because currently
-    # only grease pencil objects have the space context 'SHADERFX'
 
 
 class INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
