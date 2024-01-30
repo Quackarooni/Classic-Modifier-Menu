@@ -356,11 +356,18 @@ class FlatMenuBaseclass(SearchToTypeMenu):
 
     @classmethod
     def draw_operator_column(cls, layout, header, types, icon='NONE'):
-        col = layout.column()
+        header_mode = fetch_user_preferences("modifier_headers")
         text_ctxt = cls.TRANSLATION_CONTEXT
+        
+        col = layout.column()
 
-        col.label(text=header, icon=icon)
-        col.separator()
+        if header_mode != 'HIDE':
+            if header_mode != 'WITH_ICONS':
+                icon = 'NONE'
+
+            col.label(text=header, icon=icon)
+            col.separator()
+
         for op_type in types:
             label, op_icon = cls.OPERATOR_DATA[op_type]
             col.operator(cls.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
