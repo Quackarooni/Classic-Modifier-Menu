@@ -113,9 +113,11 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         row = layout.row()
         col1 = row.column()
         col1.label(text="Modifier Menu Settings:")
-        col1 = col1.box().column()
-        col1.prop(self, "modifier_menu_label")
-        self.draw_prop_newline(col1, "modifier_headers")
+        col1.box().column().prop(self, "modifier_menu_label")
+
+        col1.label(text="Header Settings:")
+        box = col1.box().column()
+        box.prop(self, "modifier_headers", text="Visiblity")
 
         col2 = row.column()
         col2.label(text="Asset Menu Settings:")
