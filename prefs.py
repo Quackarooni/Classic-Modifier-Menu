@@ -79,12 +79,9 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
     input_mode: EnumProperty(
         name="Input Mode",
         items=(
-            ("TYPE_TO_SEARCH", "Type to Search", "Typing while a menu is switches in a searchbar containing your input", 'VIEWZOOM', 0),
+            ("TYPE_TO_SEARCH", "Type to Search", "Typing while a menu is open will switch to a searchbar containing your input", 'VIEWZOOM', 0),
             ("ACCELERATOR_KEYS", "Accelerator Keys", 
-            """
-            Pressing a key will jump to an option that has that same key underlined.
-            Search can still be triggered if spacebar is pressed when the menu is opened
-            """, 
+            "Pressing a key will jump to an option that has that same key underlined.\nSearch can still be triggered if spacebar is pressed when the menu is opened", 
             'UNDERLINE', 1),
         ),
         default='TYPE_TO_SEARCH',
