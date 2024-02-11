@@ -1,10 +1,9 @@
 import bpy
 from bpy.props import BoolProperty, EnumProperty, StringProperty
 
-from . import keymap_ui
 from .utils import fetch_user_preferences
 from .ui import toggle_input_mode
-
+from .keymaps import keymap_layout
 
 class ClassicModifierPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
@@ -122,9 +121,11 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         col2.prop(self, "asset_menu_label")
         self.draw_prop_newline(col2, "built_in_asset_categories")
 
-        keymap_ui.draw_keyboard_shorcuts(self, layout, context)
-        return
-    
+        keymap_layout.draw_keyboard_shorcuts(self, layout, context)
+
+
+keymap_layout.register_properties(preferences=ClassicModifierPreferences)
+
 
 classes = (
     ClassicModifierPreferences,
