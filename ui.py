@@ -455,7 +455,7 @@ class OBJECT_MT_gpencil_modifier_add_physics(ColumnMenuBaseclass, Menu):
 
 
 class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
-    bl_description = "Add a visual effect to the active grease pencil object"\
+    bl_description = "Add a visual effect to the active grease pencil object"
 
     op_id = "object.shaderfx_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="ShaderFx")
