@@ -522,7 +522,8 @@ original_class_dict = {
 
 def register():
     for cls in overriding_classes:
-        bpy.utils.unregister_class(original_class_dict[cls.__name__])
+        if hasattr(bpy.types, cls.__name__):
+            bpy.utils.unregister_class(original_class_dict[cls.__name__])
         bpy.utils.register_class(cls)
 
     for cls in created_classes:
@@ -531,7 +532,8 @@ def register():
 
 def unregister():
     for cls in overriding_classes:
-        bpy.utils.unregister_class(cls)
+        if hasattr(bpy.types, cls.__name__):
+            bpy.utils.unregister_class(cls)  
         bpy.utils.register_class(original_class_dict[cls.__name__])
 
     for cls in created_classes:
