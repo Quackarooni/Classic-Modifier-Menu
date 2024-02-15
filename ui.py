@@ -486,14 +486,42 @@ class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
     def draw(self, _context):
         layout = self.layout.row()
 
-        self.draw_operator_column(layout, header="Motion Tracking", icon='TRACKING',
-            types=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER'))
-        self.draw_operator_column(layout, header="Transform", icon='OBJECT_HIDDEN',
-            types=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE'))
-        self.draw_operator_column(layout, header="Tracking", icon='TRACKER',
-            types=('CLAMP_TO', 'DAMPED_TRACK', 'LOCKED_TRACK', 'STRETCH_TO', 'TRACK_TO'))
-        self.draw_operator_column(layout, header="Relationship", icon='DRIVER',
-            types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
+        self.draw_column(layout, header="Motion Tracking", menu_name="OBJECT_MT_constraint_add_motion_tracking", icon='TRACKING')
+        self.draw_column(layout, header="Transform", menu_name="OBJECT_MT_constraint_add_transform", icon='OBJECT_HIDDEN')
+        self.draw_column(layout, header="Tracking", menu_name="OBJECT_MT_constraint_add_tracking", icon='TRACKER')
+        self.draw_column(layout, header="Relationship", menu_name="OBJECT_MT_constraint_add_relationship", icon='DRIVER')
+
+
+class OBJECT_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
+    bl_label = "Motion Tracking"
+    op_id = "object.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER')
+
+
+class OBJECT_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
+    bl_label = "Transform"
+    op_id = "object.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE')
+
+
+class OBJECT_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
+    bl_label = "Tracking"
+    op_id = "object.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('CLAMP_TO', 'DAMPED_TRACK', 'LOCKED_TRACK', 'STRETCH_TO', 'TRACK_TO')
+
+
+class OBJECT_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
+    bl_label = "Relationship"
+    op_id = "object.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP')
 
 
 class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
@@ -505,14 +533,42 @@ class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
     def draw(self, _context):
         layout = self.layout.row()
 
-        self.draw_operator_column(layout, header="Motion Tracking", icon='TRACKING',
-            types=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER'))
-        self.draw_operator_column(layout, header="Transform", icon='OBJECT_HIDDEN',
-            types=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE'))
-        self.draw_operator_column(layout, header="Tracking", icon='TRACKER',
-            types=('CLAMP_TO', 'DAMPED_TRACK', 'IK', 'LOCKED_TRACK', 'SPLINE_IK', 'STRETCH_TO', 'TRACK_TO'))
-        self.draw_operator_column(layout, header="Relationship", icon='DRIVER',
-            types=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP'))
+        self.draw_column(layout, header="Motion Tracking", menu_name="BONE_MT_constraint_add_motion_tracking", icon='TRACKING')
+        self.draw_column(layout, header="Transform", menu_name="BONE_MT_constraint_add_transform", icon='OBJECT_HIDDEN')
+        self.draw_column(layout, header="Tracking", menu_name="BONE_MT_constraint_add_tracking", icon='TRACKER')
+        self.draw_column(layout, header="Relationship", menu_name="BONE_MT_constraint_add_relationship", icon='DRIVER')
+
+
+class BONE_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
+    bl_label = "Motion Tracking"
+    op_id = "pose.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER')
+
+
+class BONE_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
+    bl_label = "Transform"
+    op_id = "pose.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE')
+
+
+class BONE_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
+    bl_label = "Tracking"
+    op_id = "pose.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('CLAMP_TO', 'DAMPED_TRACK', 'IK', 'LOCKED_TRACK', 'SPLINE_IK', 'STRETCH_TO', 'TRACK_TO')
+
+
+class BONE_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
+    bl_label = "Relationship"
+    op_id = "pose.constraint_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
+
+    items=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'PIVOT', 'SHRINKWRAP')
 
 
 def reload_menus():
@@ -570,6 +626,14 @@ created_classes = (
     OBJECT_MT_gpencil_modifier_add_generate,
     OBJECT_MT_gpencil_modifier_add_deform,
     OBJECT_MT_gpencil_modifier_add_physics,
+    OBJECT_MT_constraint_add_motion_tracking,
+    OBJECT_MT_constraint_add_transform,
+    OBJECT_MT_constraint_add_tracking,
+    OBJECT_MT_constraint_add_relationship,
+    BONE_MT_constraint_add_motion_tracking,
+    BONE_MT_constraint_add_transform,
+    BONE_MT_constraint_add_tracking,
+    BONE_MT_constraint_add_relationship,
 )
 
 original_class_dict = {
