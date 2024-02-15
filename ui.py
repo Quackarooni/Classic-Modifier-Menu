@@ -358,6 +358,23 @@ class BONE_PT_constraints(DropdownPanelBaseclass, Panel):
 class FlatMenuBaseclass(SearchToTypeMenu):
     bl_label = ""
 
+    @staticmethod
+    def draw_column(layout, header, menu_name, icon):
+        header_mode = fetch_user_preferences("modifier_headers")
+        col = layout.column()
+
+        if header_mode != 'HIDE':
+            if header_mode != 'WITH_ICONS':
+                icon = 'NONE'
+
+            col.label(text=header, icon=icon)
+            col.separator()
+        
+        if layout.operator_context == 'INVOKE_REGION_WIN':
+            col.menu(menu_name)
+        else:
+            col.menu_contents(menu_name)
+
     @classmethod
     def draw_operator_column(cls, layout, header, types, icon='NONE'):
         header_mode = fetch_user_preferences("modifier_headers")
@@ -382,7 +399,7 @@ class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
 
     op_id = "object.gpencil_modifier_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
-    
+
     @classmethod
     def poll(cls, context):
         ob = context.object
@@ -391,14 +408,50 @@ class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
     def draw(self, _context):
         layout = self.layout.row()
 
-        self.draw_operator_column(layout, header="Modify", icon='MODIFIER_DATA',
-            types=('GP_TEXTURE', 'GP_TIME', 'GP_WEIGHT_ANGLE', 'GP_WEIGHT_PROXIMITY'))
-        self.draw_operator_column(layout, header="Generate", icon='FILE_3D',
-            types=('GP_ARRAY', 'GP_BUILD', 'GP_DASH', 'GP_ENVELOPE', 'GP_LENGTH', 'GP_LINEART', 'GP_MIRROR', 'GP_MULTIPLY', 'GP_OUTLINE', 'GP_SIMPLIFY', 'GP_SUBDIV'))
-        self.draw_operator_column(layout, header="Deform", icon='STROKE',
-            types=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK'))
-        self.draw_operator_column(layout, header="Color", icon='OVERLAY', 
-            types=('GP_COLOR', 'GP_OPACITY', 'GP_TINT'))
+        self.draw_column(layout, header="Modify", menu_name="OBJECT_MT_gpencil_modifier_add_modify", icon='MODIFIER_DATA')
+        self.draw_column(layout, header="Generate", menu_name="OBJECT_MT_gpencil_modifier_add_generate", icon='FILE_3D')
+        self.draw_column(layout, header="Deform", menu_name="OBJECT_MT_gpencil_modifier_add_deform", icon='STROKE')
+        self.draw_column(layout, header="Physics", menu_name="OBJECT_MT_gpencil_modifier_add_physics", icon='OVERLAY')
+
+
+class ColumnMenuBaseclass:
+    def draw(self, context):
+        text_ctxt = self.TRANSLATION_CONTEXT
+        for op_type in self.items:
+            label, op_icon = self.OPERATOR_DATA[op_type]
+            self.layout.operator(self.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+            
+
+class OBJECT_MT_gpencil_modifier_add_modify(ColumnMenuBaseclass, Menu):
+    bl_label = "Modify"
+    op_id = "object.gpencil_modifier_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
+
+    items=('GP_TEXTURE', 'GP_TIME', 'GP_WEIGHT_ANGLE', 'GP_WEIGHT_PROXIMITY')
+
+
+class OBJECT_MT_gpencil_modifier_add_generate(ColumnMenuBaseclass, Menu):
+    bl_label = "Generate"
+    op_id = "object.gpencil_modifier_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
+
+    items=('GP_ARRAY', 'GP_BUILD', 'GP_DASH', 'GP_ENVELOPE', 'GP_LENGTH', 'GP_LINEART', 'GP_MIRROR', 'GP_MULTIPLY', 'GP_OUTLINE', 'GP_SIMPLIFY', 'GP_SUBDIV')
+
+
+class OBJECT_MT_gpencil_modifier_add_deform(ColumnMenuBaseclass, Menu):
+    bl_label = "Deform"
+    op_id = "object.gpencil_modifier_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
+    
+    items=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK')
+
+
+class OBJECT_MT_gpencil_modifier_add_physics(ColumnMenuBaseclass, Menu):
+    bl_label = "Physics"
+    op_id = "object.gpencil_modifier_add"
+    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
+
+    items=('GP_COLOR', 'GP_OPACITY', 'GP_TINT')
 
 
 class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
@@ -513,6 +566,10 @@ created_classes = (
     OBJECT_MT_gpencil_shaderfx_add,
     OBJECT_MT_constraint_add,
     BONE_MT_constraint_add,
+    OBJECT_MT_gpencil_modifier_add_modify,
+    OBJECT_MT_gpencil_modifier_add_generate,
+    OBJECT_MT_gpencil_modifier_add_deform,
+    OBJECT_MT_gpencil_modifier_add_physics,
 )
 
 original_class_dict = {
