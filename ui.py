@@ -70,7 +70,11 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
 
             col.label(text=header, icon=icon)
             col.separator()
-        col.menu_contents(menu_name)
+        
+        if layout.operator_context == 'INVOKE_REGION_WIN':
+            col.menu(menu_name)
+        else:
+            col.menu_contents(menu_name)
 
     def draw(self, context):
         layout = self.layout
