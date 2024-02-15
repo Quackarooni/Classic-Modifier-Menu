@@ -20,7 +20,7 @@ bl_info = {
     "author": "Quackers",
     "description": "Addon for restoring the pre-4.0 style of the 'Add Modifiers' menu.",
     "blender": (4, 0, 0),
-    "version" : (1, 1, 0),
+    "version" : (1, 1, 1),
     "location": "Properties",
     "category": "Interface",
 }
