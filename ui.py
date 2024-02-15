@@ -61,7 +61,8 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
 
     @staticmethod
     def draw_column(layout, header, menu_name, icon):
-        header_mode = fetch_user_preferences("modifier_headers")
+        prefs = fetch_user_preferences()
+        header_mode = prefs.modifier_headers
         col = layout.column()
 
         if header_mode != 'HIDE':
@@ -71,7 +72,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
             col.label(text=header, icon=icon)
             col.separator()
         
-        if layout.operator_context == 'INVOKE_REGION_WIN':
+        if prefs.display_as == 'BUTTON' and layout.operator_context == 'INVOKE_REGION_WIN':
             col.menu(menu_name)
         else:
             col.menu_contents(menu_name)
@@ -360,7 +361,9 @@ class FlatMenuBaseclass(SearchToTypeMenu):
 
     @staticmethod
     def draw_column(layout, header, menu_name, icon):
-        header_mode = fetch_user_preferences("modifier_headers")
+        prefs = fetch_user_preferences()
+        header_mode = prefs.modifier_headers
+        
         col = layout.column()
 
         if header_mode != 'HIDE':
@@ -370,7 +373,7 @@ class FlatMenuBaseclass(SearchToTypeMenu):
             col.label(text=header, icon=icon)
             col.separator()
         
-        if layout.operator_context == 'INVOKE_REGION_WIN':
+        if prefs.display_as == 'BUTTON' and layout.operator_context == 'INVOKE_REGION_WIN':
             col.menu(menu_name)
         else:
             col.menu_contents(menu_name)
