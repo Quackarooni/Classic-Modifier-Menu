@@ -50,7 +50,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
         layout.template_modifiers()
 
 
-class OBJECT_MT_modifier_add(ModifierAddMenu, Menu):
+class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
     bl_label = ""
     bl_description = "Add a procedural operation/effect to the active object"
 
