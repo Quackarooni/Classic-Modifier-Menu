@@ -25,19 +25,54 @@ bl_info = {
     "category": "Interface",
 }
 
+
+import bpy
+import sys
+
 from . import operators, ui, keymaps, prefs 
 modules = (operators, ui, keymaps, prefs,)
+
+
+def reload_prepended_and_appended_draw_funcs():
+    variables_to_look_up = set(ui.original_class_dict.keys())
+
+    for mod_name in bpy.context.preferences.addons.keys():
+        module = sys.modules.get(mod_name)
+        if module is None or module.register == register:
+            continue
+
+        # Get register variables
+        var_names = list(module.register.__code__.co_names)
+
+        # Get module and direct_submodule variables
+        var_names.extend([item for item in dir(module) if not item.startswith("__")])
+
+        if modules := getattr(module, "modules", None):
+            for module in modules:
+                var_names.extend([item for item in dir(module) if not item.startswith("__")])
+                
+        matches = variables_to_look_up.intersection(set(var_names))
+        if matches:
+            module.unregister()
+            module.register()
+            print(f"Classic Modifier Menu: Re-registered dependent module '{mod_name}'. - {matches}")
+                
+    return
 
 
 def register():
     for module in modules:
         module.register()
 
+    reload_prepended_and_appended_draw_funcs()
+    
 
 def unregister():
     for module in modules:
         module.unregister()
 
+    reload_prepended_and_appended_draw_funcs()
+    
 
 if __name__ == "__main__":
     register()
