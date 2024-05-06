@@ -34,9 +34,12 @@ modules = (operators, ui, keymaps, prefs,)
 
 
 def reload_prepended_and_appended_draw_funcs():
+    addons = bpy.context.preferences.addons
+    addons = addons.keys()[:addons.find(__name__)]
+
     variables_to_look_up = set(ui.original_class_dict.keys())
 
-    for mod_name in bpy.context.preferences.addons.keys():
+    for mod_name in addons:
         module = sys.modules.get(mod_name)
         if module is None or module.register == register:
             continue
