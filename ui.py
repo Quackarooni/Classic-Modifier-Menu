@@ -232,10 +232,33 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
     bl_label = "Assets"
     bl_description = "Add a modifier nodegroup to the active object"
 
+    if bpy.app.version >= (4, 2, 0):
+        @staticmethod
+        def draw_built_in_menus(layout):
+            prefs = fetch_user_preferences()
+            if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
+                layout.menu("OBJECT_MT_modifier_add_edit_assets")
+                layout.menu("OBJECT_MT_modifier_add_generate_assets")
+                layout.menu("OBJECT_MT_modifier_add_deform_assets")
+
+            layout.menu("OBJECT_MT_modifier_add_normals_assets")
+
+            if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
+                layout.menu("OBJECT_MT_modifier_add_physics_assets")
+                layout.separator()
+    else:
+        @staticmethod
+        def draw_built_in_menus(layout):
+            prefs = fetch_user_preferences()
+            if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
+                layout.menu("OBJECT_MT_modifier_add_edit_assets")
+                layout.menu("OBJECT_MT_modifier_add_generate_assets")
+                layout.menu("OBJECT_MT_modifier_add_deform_assets")
+                layout.menu("OBJECT_MT_modifier_add_physics_assets")
+                layout.separator()
+
     def draw(self, context):
         layout = self.layout
-        prefs = fetch_user_preferences()
-        ob_type = context.object.type
         if layout.operator_context == 'EXEC_REGION_WIN':
             layout.operator_context = 'INVOKE_REGION_WIN'
             layout.operator("wm.search_single_menu", text="Search...", icon='VIEWZOOM').menu_idname = self.bl_idname
@@ -245,12 +268,8 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
         self.operator_modifier_add(layout, 'NODES')
         layout.separator()
         #TODO - Add poll function to only display these menus if their catalogs exist
-        if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
-            layout.menu("OBJECT_MT_modifier_add_edit_assets")
-            layout.menu("OBJECT_MT_modifier_add_generate_assets")
-            layout.menu("OBJECT_MT_modifier_add_deform_assets")
-            layout.menu("OBJECT_MT_modifier_add_physics_assets")
-            layout.separator()
+        self.draw_built_in_menus(layout) 
+
         layout.menu_contents("OBJECT_MT_modifier_add_root_catalogs")
 
 
@@ -270,6 +289,8 @@ class OBJECT_MT_modifier_add_deform_assets(ModifierAssetMenu, ModifierAddMenu, M
 class OBJECT_MT_modifier_add_physics_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
     bl_label = OBJECT_MT_modifier_add_physics.bl_label
 
+class OBJECT_MT_modifier_add_normals_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
+    bl_label = "Normals"
 
 class DropdownPanelBaseclass:
     bl_space_type = 'PROPERTIES'
@@ -662,6 +683,9 @@ def register():
     for cls in created_classes:
         bpy.utils.register_class(cls)
 
+    if bpy.app.version >= (4, 2, 0):
+        bpy.utils.register_class(OBJECT_MT_modifier_add_normals_assets)
+
 
 def unregister():
     for cls in overriding_classes:
@@ -671,5 +695,8 @@ def unregister():
 
     for cls in created_classes:
         bpy.utils.unregister_class(cls)
+
+    if bpy.app.version >= (4, 2, 0):
+        bpy.utils.unregister_class(OBJECT_MT_modifier_add_normals_assets)
 
     SearchToTypeMenu.bl_options = {'SEARCH_ON_KEY_PRESS'}
