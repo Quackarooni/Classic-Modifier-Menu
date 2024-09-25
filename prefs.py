@@ -8,12 +8,6 @@ from .keymaps import keymap_layout
 class ClassicModifierPreferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
-    show_keymaps: BoolProperty(
-        name="Show Keymaps",
-        default=False,
-        description="When enabled, displays keymap list",
-    )
-
     show_assets: BoolProperty(
         name="Show Assets Menu",
         default=True,
