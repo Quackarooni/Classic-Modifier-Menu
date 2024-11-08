@@ -81,14 +81,16 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
         layout = self.layout
         row = layout.row()
         ob_type = context.object.type
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
+        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'GREASEPENCIL'}:
             self.draw_column(row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME'}:
+        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME', 'GREASEPENCIL'}:
             self.draw_column(row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'VOLUME'}:
+        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'VOLUME', 'GREASEPENCIL'}:
             self.draw_column(row, header="Deform", menu_name="OBJECT_MT_modifier_add_deform", icon='STROKE')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
             self.draw_column(row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
+        if ob_type in {'GREASEPENCIL'}:
+            self.draw_column(row, header="Color", menu_name="OBJECT_MT_modifier_add_color", icon='COLOR')
 
 
 class OBJECT_MT_modifier_add_edit(ModifierAddMenu, Menu):
@@ -113,6 +115,12 @@ class OBJECT_MT_modifier_add_edit(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'VERTEX_WEIGHT_EDIT')
             self.operator_modifier_add(layout, 'VERTEX_WEIGHT_MIX')
             self.operator_modifier_add(layout, 'VERTEX_WEIGHT_PROXIMITY')
+
+        if ob_type == 'GREASEPENCIL':
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_TEXTURE')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_TIME')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_VERTEX_WEIGHT_PROXIMITY')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_VERTEX_WEIGHT_ANGLE')
 
         if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
@@ -160,6 +168,19 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'WELD')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'WIREFRAME')
+        if ob_type == 'GREASEPENCIL':
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_ARRAY')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_BUILD')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_DASH')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_ENVELOPE')
+            self.operator_modifier_add(layout, 'NODES')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_LENGTH')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_MIRROR')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_MULTIPLY')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_OUTLINE')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_SIMPLIFY')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_SUBDIV')
+            self.operator_modifier_add(layout, 'LINEART')
 
         if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
@@ -199,6 +220,15 @@ class OBJECT_MT_modifier_add_deform(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'WAVE')
         if ob_type == 'VOLUME':
             self.operator_modifier_add(layout, 'VOLUME_DISPLACE')
+        if ob_type == 'GREASEPENCIL':
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_ARMATURE')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_HOOK')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_LATTICE')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_NOISE')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_OFFSET')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_SHRINKWRAP')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_SMOOTH')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_THICKNESS')
 
         if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
@@ -228,34 +258,45 @@ class OBJECT_MT_modifier_add_physics(ModifierAddMenu, Menu):
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
 
 
+class OBJECT_MT_modifier_add_color(ModifierAddMenu, Menu):
+    bl_label = "Color"
+
+    def draw(self, context):
+        layout = self.layout
+        prefs = fetch_user_preferences()
+
+        ob_type = context.object.type
+        if ob_type == 'GREASEPENCIL':
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_COLOR')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_TINT')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_OPACITY')
+
+        if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
+            layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
+
+
 class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
     bl_label = "Assets"
     bl_description = "Add a modifier nodegroup to the active object"
 
-    if bpy.app.version >= (4, 2, 0):
-        @staticmethod
-        def draw_built_in_menus(layout):
-            prefs = fetch_user_preferences()
-            if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
-                layout.menu("OBJECT_MT_modifier_add_edit_assets")
-                layout.menu("OBJECT_MT_modifier_add_generate_assets")
-                layout.menu("OBJECT_MT_modifier_add_deform_assets")
+    @staticmethod
+    def draw_built_in_menus(layout, context):
+        ob = context.object
 
+        prefs = fetch_user_preferences()
+        if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
+            layout.menu("OBJECT_MT_modifier_add_edit_assets")
+            layout.menu("OBJECT_MT_modifier_add_generate_assets")
+            layout.menu("OBJECT_MT_modifier_add_deform_assets")
+
+        if ob.type == "GREASEPENCIL":
+            if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
+                layout.menu("OBJECT_MT_modifier_add_color_assets")
+        else:
             layout.menu("OBJECT_MT_modifier_add_normals_assets")
-
             if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
                 layout.menu("OBJECT_MT_modifier_add_physics_assets")
-                layout.separator()
-    else:
-        @staticmethod
-        def draw_built_in_menus(layout):
-            prefs = fetch_user_preferences()
-            if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
-                layout.menu("OBJECT_MT_modifier_add_edit_assets")
-                layout.menu("OBJECT_MT_modifier_add_generate_assets")
-                layout.menu("OBJECT_MT_modifier_add_deform_assets")
-                layout.menu("OBJECT_MT_modifier_add_physics_assets")
-                layout.separator()
+            layout.separator()
 
     def draw(self, context):
         layout = self.layout
@@ -268,7 +309,7 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
         self.operator_modifier_add(layout, 'NODES')
         layout.separator()
         #TODO - Add poll function to only display these menus if their catalogs exist
-        self.draw_built_in_menus(layout) 
+        self.draw_built_in_menus(layout, context) 
 
         layout.menu_contents("OBJECT_MT_modifier_add_root_catalogs")
 
@@ -288,6 +329,9 @@ class OBJECT_MT_modifier_add_deform_assets(ModifierAssetMenu, ModifierAddMenu, M
 
 class OBJECT_MT_modifier_add_physics_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
     bl_label = OBJECT_MT_modifier_add_physics.bl_label
+
+class OBJECT_MT_modifier_add_color_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
+    bl_label = OBJECT_MT_modifier_add_color.bl_label
 
 class OBJECT_MT_modifier_add_normals_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
     bl_label = "Normals"
@@ -310,24 +354,6 @@ class DropdownPanelBaseclass:
 
     def post_draw(layout):
         ...
-        
-
-class DATA_PT_gpencil_modifiers(DropdownPanelBaseclass, Panel):
-    bl_label = "Modifiers"
-    bl_context = "modifier"
-
-    menu_id = "OBJECT_MT_gpencil_modifier_add"
-    op_id = "object.invoke_add_gpencil_modifier_menu"
-    label = "Add Modifier"
-
-    @classmethod
-    def poll(cls, context):
-        ob = context.object
-        return ob and ob.type == 'GPENCIL'
-
-    @staticmethod
-    def post_draw(layout):
-        layout.template_grease_pencil_modifiers()
     
 
 class DATA_PT_shader_fx(DropdownPanelBaseclass, Panel):
@@ -416,26 +442,6 @@ class FlatMenuBaseclass(SearchToTypeMenu):
         for op_type in types:
             label, op_icon = cls.OPERATOR_DATA[op_type]
             col.operator(cls.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
-            
-
-class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
-    bl_description = "Add a procedural operation/effect to the active grease pencil object"
-
-    op_id = "object.gpencil_modifier_add"
-    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
-
-    @classmethod
-    def poll(cls, context):
-        ob = context.object
-        return ob and ob.type == 'GPENCIL'
-
-    def draw(self, _context):
-        layout = self.layout.row()
-
-        self.draw_column(layout, header="Modify", menu_name="OBJECT_MT_gpencil_modifier_add_modify", icon='MODIFIER_DATA')
-        self.draw_column(layout, header="Generate", menu_name="OBJECT_MT_gpencil_modifier_add_generate", icon='FILE_3D')
-        self.draw_column(layout, header="Deform", menu_name="OBJECT_MT_gpencil_modifier_add_deform", icon='STROKE')
-        self.draw_column(layout, header="Physics", menu_name="OBJECT_MT_gpencil_modifier_add_physics", icon='OVERLAY')
 
 
 class ColumnMenuBaseclass:
@@ -444,38 +450,6 @@ class ColumnMenuBaseclass:
         for op_type in self.items:
             label, op_icon = self.OPERATOR_DATA[op_type]
             self.layout.operator(self.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
-            
-
-class OBJECT_MT_gpencil_modifier_add_modify(ColumnMenuBaseclass, Menu):
-    bl_label = "Modify"
-    op_id = "object.gpencil_modifier_add"
-    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
-
-    items=('GP_TEXTURE', 'GP_TIME', 'GP_WEIGHT_ANGLE', 'GP_WEIGHT_PROXIMITY')
-
-
-class OBJECT_MT_gpencil_modifier_add_generate(ColumnMenuBaseclass, Menu):
-    bl_label = "Generate"
-    op_id = "object.gpencil_modifier_add"
-    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
-
-    items=('GP_ARRAY', 'GP_BUILD', 'GP_DASH', 'GP_ENVELOPE', 'GP_LENGTH', 'GP_LINEART', 'GP_MIRROR', 'GP_MULTIPLY', 'GP_OUTLINE', 'GP_SIMPLIFY', 'GP_SUBDIV')
-
-
-class OBJECT_MT_gpencil_modifier_add_deform(ColumnMenuBaseclass, Menu):
-    bl_label = "Deform"
-    op_id = "object.gpencil_modifier_add"
-    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
-    
-    items=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK')
-
-
-class OBJECT_MT_gpencil_modifier_add_physics(ColumnMenuBaseclass, Menu):
-    bl_label = "Physics"
-    op_id = "object.gpencil_modifier_add"
-    OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
-
-    items=('GP_COLOR', 'GP_OPACITY', 'GP_TINT')
 
 
 class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
@@ -599,7 +573,6 @@ def reload_menus():
     menus = (
         OBJECT_MT_modifier_add,
         OBJECT_MT_modifier_add_assets,
-        OBJECT_MT_gpencil_modifier_add, 
         OBJECT_MT_gpencil_shaderfx_add, 
         OBJECT_MT_constraint_add,
         BONE_MT_constraint_add, 
@@ -630,7 +603,7 @@ overriding_classes = (
     OBJECT_MT_modifier_add_generate,
     OBJECT_MT_modifier_add_deform,
     OBJECT_MT_modifier_add_physics,
-    DATA_PT_gpencil_modifiers,
+    OBJECT_MT_modifier_add_color,
     DATA_PT_shader_fx,
     OBJECT_PT_constraints,
     BONE_PT_constraints,
@@ -642,14 +615,10 @@ created_classes = (
     OBJECT_MT_modifier_add_generate_assets,
     OBJECT_MT_modifier_add_deform_assets,
     OBJECT_MT_modifier_add_physics_assets,
-    OBJECT_MT_gpencil_modifier_add,
+    OBJECT_MT_modifier_add_color_assets,
     OBJECT_MT_gpencil_shaderfx_add,
     OBJECT_MT_constraint_add,
     BONE_MT_constraint_add,
-    OBJECT_MT_gpencil_modifier_add_modify,
-    OBJECT_MT_gpencil_modifier_add_generate,
-    OBJECT_MT_gpencil_modifier_add_deform,
-    OBJECT_MT_gpencil_modifier_add_physics,
     OBJECT_MT_constraint_add_motion_tracking,
     OBJECT_MT_constraint_add_transform,
     OBJECT_MT_constraint_add_tracking,
@@ -667,7 +636,7 @@ original_class_dict = {
     "OBJECT_MT_modifier_add_generate" : properties_data_modifier.OBJECT_MT_modifier_add_generate,
     "OBJECT_MT_modifier_add_deform" : properties_data_modifier.OBJECT_MT_modifier_add_deform,
     "OBJECT_MT_modifier_add_physics" : properties_data_modifier.OBJECT_MT_modifier_add_physics,
-    "DATA_PT_gpencil_modifiers" : properties_data_modifier.DATA_PT_gpencil_modifiers,
+    "OBJECT_MT_modifier_add_color" : properties_data_modifier.OBJECT_MT_modifier_add_color,
     "DATA_PT_shader_fx" : properties_data_shaderfx.DATA_PT_shader_fx,
     "OBJECT_PT_constraints" : properties_constraint.OBJECT_PT_constraints,
     "BONE_PT_constraints" : properties_constraint.BONE_PT_constraints,
