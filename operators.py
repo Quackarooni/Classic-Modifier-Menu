@@ -31,7 +31,7 @@ class INVOKE_OT_ASSET_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
     space_context = 'MODIFIER'
 
 
-if bpy.app.version <= (4, 3, 0):
+if bpy.app.version >= (4, 3, 0):
     class INVOKE_OT_ADD_GPENCIL_MODIFIER_MENU(InvokeMenuBaseClass, Operator):
         bl_idname = "object.invoke_add_gpencil_modifier_menu"
         bl_label = "Add Grease Pencil Modifier"
@@ -63,7 +63,7 @@ class INVOKE_OT_ADD_BONE_CONSTRAINTS_MENU(InvokeMenuBaseClass, Operator):
     menu_id = "BONE_MT_constraint_add"
     space_context = 'BONE_CONSTRAINT'
 
-if bpy.app.version <= (4, 3, 0):
+if bpy.app.version >= (4, 3, 0):
     classes = (
         INVOKE_OT_CLASSIC_MODIFIER_MENU,
         INVOKE_OT_ASSET_MODIFIER_MENU,
