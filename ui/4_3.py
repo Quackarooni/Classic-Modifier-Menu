@@ -24,7 +24,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
     @classmethod
     def poll(cls, context):
         ob = context.object
-        return ob and ob.type != 'GPENCIL'
+        return ob
 
     def draw(self, context):
         layout = self.layout
@@ -57,7 +57,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
     @classmethod
     def poll(cls, context):
         ob = context.object
-        return ob and ob.type != 'GPENCIL'
+        return ob
 
     @staticmethod
     def draw_column(layout, header, menu_name, icon):
@@ -461,7 +461,7 @@ class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
     @classmethod
     def poll(cls, context):
         ob = context.object
-        return ob and ob.type == 'GPENCIL'
+        return ob and ob.type == 'GREASEPENCIL'
 
     def draw(self, _context):
         layout = self.layout.row()
