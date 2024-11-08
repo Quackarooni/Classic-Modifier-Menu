@@ -234,21 +234,24 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
 
     if bpy.app.version >= (4, 2, 0):
         @staticmethod
-        def draw_built_in_menus(layout):
+        def draw_built_in_menus(layout, context):
+            ob = context.object
+
             prefs = fetch_user_preferences()
             if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
                 layout.menu("OBJECT_MT_modifier_add_edit_assets")
                 layout.menu("OBJECT_MT_modifier_add_generate_assets")
                 layout.menu("OBJECT_MT_modifier_add_deform_assets")
 
-            layout.menu("OBJECT_MT_modifier_add_normals_assets")
+            if ob.type == "MESH":
+                layout.menu("OBJECT_MT_modifier_add_normals_assets")
 
             if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
                 layout.menu("OBJECT_MT_modifier_add_physics_assets")
                 layout.separator()
     else:
         @staticmethod
-        def draw_built_in_menus(layout):
+        def draw_built_in_menus(layout, _context):
             prefs = fetch_user_preferences()
             if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
                 layout.menu("OBJECT_MT_modifier_add_edit_assets")
@@ -268,7 +271,7 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
         self.operator_modifier_add(layout, 'NODES')
         layout.separator()
         #TODO - Add poll function to only display these menus if their catalogs exist
-        self.draw_built_in_menus(layout) 
+        self.draw_built_in_menus(layout, context) 
 
         layout.menu_contents("OBJECT_MT_modifier_add_root_catalogs")
 

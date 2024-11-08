@@ -292,8 +292,11 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
         if ob.type == "GREASEPENCIL":
             if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
                 layout.menu("OBJECT_MT_modifier_add_color_assets")
-        else:
+
+        if ob.type == "MESH":
             layout.menu("OBJECT_MT_modifier_add_normals_assets")
+
+        if ob.type != "GREASEPENCIL":
             if prefs.built_in_asset_categories in {'SHOW', 'SHOW_AND_APPEND'}:
                 layout.menu("OBJECT_MT_modifier_add_physics_assets")
             layout.separator()
