@@ -438,7 +438,7 @@ class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
         self.draw_column(layout, header="Modify", menu_name="OBJECT_MT_gpencil_modifier_add_modify", icon='MODIFIER_DATA')
         self.draw_column(layout, header="Generate", menu_name="OBJECT_MT_gpencil_modifier_add_generate", icon='FILE_3D')
         self.draw_column(layout, header="Deform", menu_name="OBJECT_MT_gpencil_modifier_add_deform", icon='STROKE')
-        self.draw_column(layout, header="Physics", menu_name="OBJECT_MT_gpencil_modifier_add_physics", icon='OVERLAY')
+        self.draw_column(layout, header="Color", menu_name="OBJECT_MT_gpencil_modifier_add_color", icon='OVERLAY')
 
 
 class ColumnMenuBaseclass:
@@ -473,8 +473,8 @@ class OBJECT_MT_gpencil_modifier_add_deform(ColumnMenuBaseclass, Menu):
     items=('GP_ARMATURE', 'GP_HOOK', 'GP_LATTICE', 'GP_NOISE', 'GP_OFFSET', 'SHRINKWRAP', 'GP_SMOOTH', 'GP_THICK')
 
 
-class OBJECT_MT_gpencil_modifier_add_physics(ColumnMenuBaseclass, Menu):
-    bl_label = "Physics"
+class OBJECT_MT_gpencil_modifier_add_color(ColumnMenuBaseclass, Menu):
+    bl_label = "Color"
     op_id = "object.gpencil_modifier_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="GpencilModifier")
 
@@ -652,7 +652,7 @@ created_classes = (
     OBJECT_MT_gpencil_modifier_add_modify,
     OBJECT_MT_gpencil_modifier_add_generate,
     OBJECT_MT_gpencil_modifier_add_deform,
-    OBJECT_MT_gpencil_modifier_add_physics,
+    OBJECT_MT_gpencil_modifier_add_color,
     OBJECT_MT_constraint_add_motion_tracking,
     OBJECT_MT_constraint_add_transform,
     OBJECT_MT_constraint_add_tracking,

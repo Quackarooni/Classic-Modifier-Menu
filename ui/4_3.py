@@ -90,7 +90,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
             self.draw_column(row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
         if ob_type in {'GREASEPENCIL'}:
-            self.draw_column(row, header="Color", menu_name="OBJECT_MT_modifier_add_color", icon='COLOR')
+            self.draw_column(row, header="Color", menu_name="OBJECT_MT_modifier_add_color", icon='OVERLAY')
 
 
 class OBJECT_MT_modifier_add_edit(ModifierAddMenu, Menu):
