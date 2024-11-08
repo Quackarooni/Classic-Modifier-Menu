@@ -2,7 +2,7 @@ import bpy
 from bpy.types import Panel, Menu
 
 from bl_ui import properties_data_modifier, properties_data_shaderfx, properties_constraint
-from .utils import fetch_user_preferences, fetch_op_data
+from ..utils import fetch_user_preferences, fetch_op_data
 
 ModifierButtonsPanel = properties_data_modifier.ModifierButtonsPanel
 ModifierAddMenu = properties_data_modifier.ModifierAddMenu
