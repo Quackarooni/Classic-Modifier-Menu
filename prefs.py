@@ -133,6 +133,9 @@ def register():
     prefs = fetch_user_preferences()
     prefs.property_unset("show_keymaps")
 
+    # Re-assign operator to trigger UI re-registration
+    prefs.input_mode = prefs.input_mode
+
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
