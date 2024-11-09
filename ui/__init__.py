@@ -3,7 +3,7 @@ import importlib
 
 
 def stringify(iterable, delimiter):
-    return delimiter.join(map(str, version_tuple))
+    return delimiter.join(map(str, iterable))
 
 
 def version_clamp(version, min_version, max_version):
