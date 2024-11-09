@@ -11,21 +11,21 @@ def version_clamp(version, min_version, max_version):
 
 
 version_map = {
-    "4_0" : "4_0",
-    "4_1" : "4_0",
-    "4_2" : "4_0",
-    "4_3" : "4_3",
+    (4, 0) : (4, 0),
+    (4, 1) : (4, 0),
+    (4, 2) : (4, 0),
+    (4, 3) : (4, 3),
 }
 
-
 original_version = bpy.app.version[:2]
-version_tuple = version_clamp(original_version, min_version=(4, 0), max_version=(4, 3))
-module_version = stringify(version_tuple, delimiter="_")
-module_version = "." + version_map[module_version]
+version_tuple = version_clamp(
+    original_version, min_version=min(version_map), max_version=max(version_map))
+module_version = version_map[version_tuple]
 
 
 try:
-    version_module = importlib.import_module(module_version, package=__package__)
+    version_module = importlib.import_module(
+        "." + stringify(module_version, delimiter="_"), package=__package__)
 except Exception:
     raise NotImplementedError(f"Blender version \"{stringify(original_version, delimiter='.')}\" is not supported.")
 
