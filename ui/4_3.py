@@ -268,8 +268,8 @@ class OBJECT_MT_modifier_add_color(ModifierAddMenu, Menu):
         ob_type = context.object.type
         if ob_type == 'GREASEPENCIL':
             self.operator_modifier_add(layout, 'GREASE_PENCIL_COLOR')
-            self.operator_modifier_add(layout, 'GREASE_PENCIL_TINT')
             self.operator_modifier_add(layout, 'GREASE_PENCIL_OPACITY')
+            self.operator_modifier_add(layout, 'GREASE_PENCIL_TINT')
 
         if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
