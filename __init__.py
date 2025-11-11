@@ -41,7 +41,7 @@ def reload_prepended_and_appended_draw_funcs():
 
     for mod_name in addons:
         module = sys.modules.get(mod_name)
-        if module is None or module.register == register:
+        if (module is None) or (not hasattr(module, "register")) or (module.register == register):
             continue
 
         # Get register variables
