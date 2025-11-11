@@ -311,7 +311,7 @@ class DropdownPanelBaseclass:
         if prefs.display_as == "DROPDOWN":
             layout.menu(self.menu_id, text=self.label)
         elif prefs.display_as == "BUTTON":
-            layout.operator(self.op_id, text=self.label, icon='ADD')
+            layout.operator(self.OPERATOR_ID, text=self.label, icon='ADD')
 
         self.post_draw(layout)
 
@@ -324,7 +324,7 @@ class DATA_PT_gpencil_modifiers(DropdownPanelBaseclass, Panel):
     bl_context = "modifier"
 
     menu_id = "OBJECT_MT_gpencil_modifier_add"
-    op_id = "object.invoke_add_gpencil_modifier_menu"
+    OPERATOR_ID = "object.invoke_add_gpencil_modifier_menu"
     label = "Add Modifier"
 
     @classmethod
@@ -342,7 +342,7 @@ class DATA_PT_shader_fx(DropdownPanelBaseclass, Panel):
     bl_context = "shaderfx"
 
     menu_id = "OBJECT_MT_gpencil_shaderfx_add"
-    op_id = "object.invoke_add_gpencil_shaderfx_menu"
+    OPERATOR_ID = "object.invoke_add_gpencil_shaderfx_menu"
     label = "Add Effect"
 
     @staticmethod
@@ -355,7 +355,7 @@ class OBJECT_PT_constraints(DropdownPanelBaseclass, Panel):
     bl_context = "constraint"
 
     menu_id = "OBJECT_MT_constraint_add"
-    op_id = "object.invoke_add_constraints_menu"
+    OPERATOR_ID = "object.invoke_add_constraints_menu"
     label = "Add Object Constraint"
 
     @classmethod
@@ -372,7 +372,7 @@ class BONE_PT_constraints(DropdownPanelBaseclass, Panel):
     bl_context = "bone_constraint"
 
     menu_id = "BONE_MT_constraint_add"
-    op_id = "pose.invoke_add_constraints_menu"
+    OPERATOR_ID = "pose.invoke_add_constraints_menu"
     label = "Add Bone Constraint"
 
     @classmethod
@@ -421,13 +421,13 @@ class FlatMenuBaseclass(SearchToTypeMenu):
             col.separator()
 
         for op_type in types:
-            col.operator(cls.op_id, text=op_type.name, icon=op_type.icon, text_ctxt=text_ctxt).type = op_type.identifier
+            col.operator(cls.OPERATOR_ID, text=op_type.name, icon=op_type.icon, text_ctxt=text_ctxt).type = op_type.identifier
 
 
 class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
     bl_description = "Add a procedural operation/effect to the active grease pencil object"
 
-    op_id = "object.gpencil_modifier_add"
+    OPERATOR_ID = "object.gpencil_modifier_add"
     TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
 
     @classmethod
@@ -447,48 +447,48 @@ class OBJECT_MT_gpencil_modifier_add(FlatMenuBaseclass, Menu):
 class ColumnMenuBaseclass:
     def draw(self, context):
         text_ctxt = self.TRANSLATION_CONTEXT
-        for enum_item in self.items:
-            self.layout.operator(self.op_id, text=enum_item.name, icon=enum_item.icon, text_ctxt=text_ctxt).type = enum_item.identifier
+        for enum_item in self.OPERATOR_ITEMS:
+            self.layout.operator(self.OPERATOR_ID, text=enum_item.name, icon=enum_item.icon, text_ctxt=text_ctxt).type = enum_item.identifier
 
 
 class OBJECT_MT_gpencil_modifier_add_modify(ColumnMenuBaseclass, Menu):
     bl_label = "Modify"
-    op_id = "object.gpencil_modifier_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
 
-    items = fetch_menu_items(class_name="GpencilModifier", category_name="Modify")
+    OPERATOR_ID = "object.gpencil_modifier_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="GpencilModifier", category_name="Modify")
 
 
 class OBJECT_MT_gpencil_modifier_add_generate(ColumnMenuBaseclass, Menu):
     bl_label = "Generate"
-    op_id = "object.gpencil_modifier_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
 
-    items = fetch_menu_items(class_name="GpencilModifier", category_name="Generate")
+    OPERATOR_ID = "object.gpencil_modifier_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="GpencilModifier", category_name="Generate")
 
 
 class OBJECT_MT_gpencil_modifier_add_deform(ColumnMenuBaseclass, Menu):
     bl_label = "Deform"
-    op_id = "object.gpencil_modifier_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
 
-    items = fetch_menu_items(class_name="GpencilModifier", category_name="Deform")
+    OPERATOR_ID = "object.gpencil_modifier_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="GpencilModifier", category_name="Deform")
 
 
 class OBJECT_MT_gpencil_modifier_add_color(ColumnMenuBaseclass, Menu):
     bl_label = "Color"
-    op_id = "object.gpencil_modifier_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
 
-    items = fetch_menu_items(class_name="GpencilModifier", category_name="Color")
+    OPERATOR_ID = "object.gpencil_modifier_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="GpencilModifier")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="GpencilModifier", category_name="Color")
 
 
 class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
     bl_description = "Add a visual effect to the active grease pencil object"
 
-    op_id = "object.shaderfx_add"
+    OPERATOR_ID = "object.shaderfx_add"
     TRANSLATION_CONTEXT = fetch_translation_context(class_name="ShaderFx")
-    items = fetch_menu_items(class_name="ShaderFx")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="ShaderFx")
 
     @classmethod
     def poll(cls, context):
@@ -503,13 +503,13 @@ class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
         else:
             header = "Add Effect"
 
-        self.draw_operator_column(layout, header=header, icon='SHADERFX', types=self.items)
+        self.draw_operator_column(layout, header=header, icon='SHADERFX', types=self.OPERATOR_ITEMS)
 
 
 class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
     bl_description = "Add a constraint to the active object"
 
-    op_id = "object.constraint_add"
+    OPERATOR_ID = "object.constraint_add"
     TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
     def draw(self, _context):
@@ -523,40 +523,40 @@ class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
 
 class OBJECT_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
     bl_label = "Motion Tracking"
-    op_id = "object.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Motion Tracking")
+    OPERATOR_ID = "object.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Motion Tracking")
 
 
 class OBJECT_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
     bl_label = "Transform"
-    op_id = "object.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Transform")
+    OPERATOR_ID = "object.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Transform")
 
 
 class OBJECT_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
     bl_label = "Tracking"
-    op_id = "object.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Tracking", exclude={'IK', 'SPLINE_IK'})
+    OPERATOR_ID = "object.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Tracking", exclude={'IK', 'SPLINE_IK'})
 
 
 class OBJECT_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
     bl_label = "Relationship"
-    op_id = "object.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Relationship")
+    OPERATOR_ID = "object.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Relationship")
 
 
 class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
     bl_description = "Add a constraint to the active bone"
 
-    op_id = "pose.constraint_add"
+    OPERATOR_ID = "pose.constraint_add"
     TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
     def draw(self, _context):
@@ -570,34 +570,34 @@ class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
 
 class BONE_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
     bl_label = "Motion Tracking"
-    op_id = "pose.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Motion Tracking")
+    OPERATOR_ID = "pose.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Motion Tracking")
 
 
 class BONE_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
     bl_label = "Transform"
-    op_id = "pose.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Transform")
+    OPERATOR_ID = "pose.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Transform")
 
 
 class BONE_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
     bl_label = "Tracking"
-    op_id = "pose.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Tracking")
+    OPERATOR_ID = "pose.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Tracking")
 
 
 class BONE_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
     bl_label = "Relationship"
-    op_id = "pose.constraint_add"
-    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    items = fetch_menu_items(class_name="Constraint", category_name="Relationship")
+    OPERATOR_ID = "pose.constraint_add"
+    TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
+    OPERATOR_ITEMS = fetch_menu_items(class_name="Constraint", category_name="Relationship")
 
 
 def reload_menus():
