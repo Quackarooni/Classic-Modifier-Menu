@@ -22,3 +22,32 @@ def fetch_op_data(class_name):
     TRANSLATION_CONTEXT = type_props.translation_context
 
     return (OPERATOR_DATA, TRANSLATION_CONTEXT)
+
+
+def fetch_menu_items(class_name, category_name=None, exclude=None):
+    type_class = getattr(bpy.types, class_name)
+    type_props = type_class.bl_rna.properties["type"]
+
+    if exclude is None:
+        exclude = {}
+
+    items = []
+
+    if category_name is None:
+        for item in type_props.enum_items_static_ui:
+            if item.identifier not in exclude:
+                items.append(item)
+    else:
+        category = None
+        for item in type_props.enum_items_static_ui:
+            if item.identifier == "":
+                category = item.name
+                continue
+
+            if item.identifier in exclude:
+                continue
+
+            if category == category_name:
+                items.append(item)
+
+    return tuple(items)

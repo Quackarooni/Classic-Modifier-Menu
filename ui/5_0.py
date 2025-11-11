@@ -2,7 +2,7 @@ import bpy
 from bpy.types import Panel, Menu
 
 from bl_ui import properties_data_modifier, properties_data_shaderfx, properties_constraint
-from ..utils import fetch_user_preferences, fetch_op_data
+from ..utils import fetch_user_preferences, fetch_op_data, fetch_menu_items
 
 ModifierButtonsPanel = properties_data_modifier.ModifierButtonsPanel
 ModifierAddMenu = properties_data_modifier.ModifierAddMenu
@@ -443,16 +443,14 @@ class FlatMenuBaseclass(SearchToTypeMenu):
             col.separator()
 
         for op_type in types:
-            label, op_icon = cls.OPERATOR_DATA[op_type]
-            col.operator(cls.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+            col.operator(cls.op_id, text=op_type.name, icon=op_type.icon, text_ctxt=text_ctxt).type = op_type.identifier
 
 
 class ColumnMenuBaseclass:
     def draw(self, context):
         text_ctxt = self.TRANSLATION_CONTEXT
-        for op_type in self.items:
-            label, op_icon = self.OPERATOR_DATA[op_type]
-            self.layout.operator(self.op_id, text=label, icon=op_icon, text_ctxt=text_ctxt).type = op_type
+        for enum_item in self.items:
+            self.layout.operator(self.op_id, text=enum_item.name, icon=enum_item.icon, text_ctxt=text_ctxt).type = enum_item.identifier
 
 
 class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
@@ -460,6 +458,7 @@ class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
 
     op_id = "object.shaderfx_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="ShaderFx")
+    items = fetch_menu_items(class_name="ShaderFx")
 
     @classmethod
     def poll(cls, context):
@@ -474,8 +473,7 @@ class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
         else:
             header = "Add Effect"
 
-        self.draw_operator_column(layout, header=header, icon='SHADERFX',
-            types=('FX_BLUR', 'FX_COLORIZE', 'FX_FLIP', 'FX_GLOW', 'FX_PIXEL', 'FX_RIM', 'FX_SHADOW', 'FX_SWIRL', 'FX_WAVE'))
+        self.draw_operator_column(layout, header=header, icon='SHADERFX', types=self.items)
 
 
 class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
@@ -498,7 +496,7 @@ class OBJECT_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
     op_id = "object.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER')
+    items = fetch_menu_items(class_name="Constraint", category_name="Motion Tracking")
 
 
 class OBJECT_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
@@ -506,7 +504,7 @@ class OBJECT_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
     op_id = "object.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE')
+    items = fetch_menu_items(class_name="Constraint", category_name="Transform")
 
 
 class OBJECT_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
@@ -514,7 +512,7 @@ class OBJECT_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
     op_id = "object.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('CLAMP_TO', 'DAMPED_TRACK', 'LOCKED_TRACK', 'STRETCH_TO', 'TRACK_TO')
+    items = fetch_menu_items(class_name="Constraint", category_name="Tracking", exclude={'IK', 'SPLINE_IK'})
 
 
 class OBJECT_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
@@ -522,7 +520,7 @@ class OBJECT_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
     op_id = "object.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'GEOMETRY_ATTRIBUTE', 'PIVOT', 'SHRINKWRAP')
+    items = fetch_menu_items(class_name="Constraint", category_name="Relationship")
 
 
 class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
@@ -545,7 +543,7 @@ class BONE_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
     op_id = "pose.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('CAMERA_SOLVER', 'FOLLOW_TRACK', 'OBJECT_SOLVER')
+    items = fetch_menu_items(class_name="Constraint", category_name="Motion Tracking")
 
 
 class BONE_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
@@ -553,7 +551,7 @@ class BONE_MT_constraint_add_transform(ColumnMenuBaseclass, Menu):
     op_id = "pose.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('COPY_LOCATION', 'COPY_ROTATION', 'COPY_SCALE', 'COPY_TRANSFORMS', 'LIMIT_DISTANCE', 'LIMIT_LOCATION', 'LIMIT_ROTATION', 'LIMIT_SCALE', 'MAINTAIN_VOLUME', 'TRANSFORM', 'TRANSFORM_CACHE')
+    items = fetch_menu_items(class_name="Constraint", category_name="Transform")
 
 
 class BONE_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
@@ -561,15 +559,14 @@ class BONE_MT_constraint_add_tracking(ColumnMenuBaseclass, Menu):
     op_id = "pose.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('CLAMP_TO', 'DAMPED_TRACK', 'IK', 'LOCKED_TRACK', 'SPLINE_IK', 'STRETCH_TO', 'TRACK_TO')
-
+    items = fetch_menu_items(class_name="Constraint", category_name="Tracking")
 
 class BONE_MT_constraint_add_relationship(ColumnMenuBaseclass, Menu):
     bl_label = "Relationship"
     op_id = "pose.constraint_add"
     OPERATOR_DATA, TRANSLATION_CONTEXT = fetch_op_data(class_name="Constraint")
 
-    items=('ACTION', 'ARMATURE', 'CHILD_OF', 'FLOOR', 'FOLLOW_PATH', 'GEOMETRY_ATTRIBUTE', 'PIVOT', 'SHRINKWRAP')
+    items = fetch_menu_items(class_name="Constraint", category_name="Relationship")
 
 
 def reload_menus():
