@@ -95,7 +95,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
         layout = self.layout
         row = layout.row()
         ob_type = context.object.type
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'GREASEPENCIL'}:
+        if ob_type in {'MESH', 'CURVE', 'CURVES', 'FONT', 'SURFACE', 'LATTICE', 'POINTCLOUD', 'GREASEPENCIL'}:
             self.draw_column(context, row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME', 'GREASEPENCIL'}:
             self.draw_column(context, row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')

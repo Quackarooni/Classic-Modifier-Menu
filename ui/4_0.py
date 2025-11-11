@@ -90,18 +90,32 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
         else:
             col.menu_contents(menu_name)
 
-    def draw(self, context):
-        layout = self.layout
-        row = layout.row()
-        ob_type = context.object.type
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
-            self.draw_column(context, row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME'}:
-            self.draw_column(context, row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'VOLUME'}:
-            self.draw_column(context, row, header="Deform", menu_name="OBJECT_MT_modifier_add_deform", icon='STROKE')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
-            self.draw_column(context, row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
+    if bpy.app.version >= (4, 2, 0):
+        def draw(self, context):
+            layout = self.layout
+            row = layout.row()
+            ob_type = context.object.type
+            if ob_type in {'MESH', 'CURVE', 'CURVES', 'FONT', 'SURFACE', 'LATTICE', 'POINTCLOUD'}:
+                self.draw_column(context, row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME'}:
+                self.draw_column(context, row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'VOLUME'}:
+                self.draw_column(context, row, header="Deform", menu_name="OBJECT_MT_modifier_add_deform", icon='STROKE')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
+                self.draw_column(context, row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
+    else:
+        def draw(self, context):
+            layout = self.layout
+            row = layout.row()
+            ob_type = context.object.type
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
+                self.draw_column(context, row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME'}:
+                self.draw_column(context, row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'VOLUME'}:
+                self.draw_column(context, row, header="Deform", menu_name="OBJECT_MT_modifier_add_deform", icon='STROKE')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
+                self.draw_column(context, row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
 
 
 class OBJECT_MT_modifier_add_edit(ModifierAddMenu, Menu):
