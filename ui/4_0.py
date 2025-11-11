@@ -98,28 +98,53 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
 class OBJECT_MT_modifier_add_edit(ModifierAddMenu, Menu):
     bl_label = "Edit"
 
-    def draw(self, context):
-        layout = self.layout
-        prefs = fetch_user_preferences()
+    if bpy.app.version >= (4, 2, 0):
+        def draw(self, context):
+            layout = self.layout
+            prefs = fetch_user_preferences()
 
-        ob_type = context.object.type
-        if ob_type == 'MESH':
-            self.operator_modifier_add(layout, 'DATA_TRANSFER')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
-            self.operator_modifier_add(layout, 'MESH_CACHE')
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
-            self.operator_modifier_add(layout, 'MESH_SEQUENCE_CACHE')
-        if ob_type == 'MESH':
-            self.operator_modifier_add(layout, 'NORMAL_EDIT')
-            self.operator_modifier_add(layout, 'WEIGHTED_NORMAL')
-            self.operator_modifier_add(layout, 'UV_PROJECT')
-            self.operator_modifier_add(layout, 'UV_WARP')
-            self.operator_modifier_add(layout, 'VERTEX_WEIGHT_EDIT')
-            self.operator_modifier_add(layout, 'VERTEX_WEIGHT_MIX')
-            self.operator_modifier_add(layout, 'VERTEX_WEIGHT_PROXIMITY')
+            ob_type = context.object.type
+            if ob_type == 'MESH':
+                self.operator_modifier_add(layout, 'DATA_TRANSFER')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
+                self.operator_modifier_add(layout, 'MESH_CACHE')
+            if ob_type in {'MESH', 'CURVE', 'CURVES', 'FONT', 'POINTCLOUD'}:
+                self.operator_modifier_add(layout, 'MESH_SEQUENCE_CACHE')
+            if ob_type == 'MESH':
+                self.operator_modifier_add(layout, 'NORMAL_EDIT')
+                self.operator_modifier_add(layout, 'WEIGHTED_NORMAL')
+                self.operator_modifier_add(layout, 'UV_PROJECT')
+                self.operator_modifier_add(layout, 'UV_WARP')
+                self.operator_modifier_add(layout, 'VERTEX_WEIGHT_EDIT')
+                self.operator_modifier_add(layout, 'VERTEX_WEIGHT_MIX')
+                self.operator_modifier_add(layout, 'VERTEX_WEIGHT_PROXIMITY')
 
-        if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
-            layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
+            if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
+                layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
+    
+    else:
+        def draw(self, context):
+            layout = self.layout
+            prefs = fetch_user_preferences()
+
+            ob_type = context.object.type
+            if ob_type == 'MESH':
+                self.operator_modifier_add(layout, 'DATA_TRANSFER')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
+                self.operator_modifier_add(layout, 'MESH_CACHE')
+            if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
+                self.operator_modifier_add(layout, 'MESH_SEQUENCE_CACHE')
+            if ob_type == 'MESH':
+                self.operator_modifier_add(layout, 'NORMAL_EDIT')
+                self.operator_modifier_add(layout, 'WEIGHTED_NORMAL')
+                self.operator_modifier_add(layout, 'UV_PROJECT')
+                self.operator_modifier_add(layout, 'UV_WARP')
+                self.operator_modifier_add(layout, 'VERTEX_WEIGHT_EDIT')
+                self.operator_modifier_add(layout, 'VERTEX_WEIGHT_MIX')
+                self.operator_modifier_add(layout, 'VERTEX_WEIGHT_PROXIMITY')
+
+            if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
+                layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
 
 
 class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
