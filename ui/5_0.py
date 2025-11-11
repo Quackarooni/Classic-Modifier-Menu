@@ -17,6 +17,13 @@ ObjectConstraintPanel = properties_constraint.ObjectConstraintPanel
 BoneConstraintPanel = properties_constraint.BoneConstraintPanel
 
 
+def geometry_nodes_supported(obj_type):
+    return obj_type in {
+        'MESH', 'CURVE', 'CURVES',
+        'FONT', 'VOLUME', 'POINTCLOUD', 'GREASEPENCIL',
+    }
+
+
 class SearchToTypeMenu:
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
@@ -38,6 +45,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
         prefs = fetch_user_preferences()
         modifier_label = prefs.modifier_menu_label
         asset_label = prefs.asset_menu_label
+        ob_type = context.object.type
 
         if prefs.stacking == 'VERTICAL':
             sublayout = layout
@@ -51,7 +59,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
                 
         elif prefs.display_as == "BUTTON":
             sublayout.operator("object.invoke_classic_modifier_menu", text=modifier_label, icon='ADD')
-            if prefs.show_assets:
+            if prefs.show_assets and geometry_nodes_supported(ob_type):
                 sublayout.operator("object.invoke_asset_modifier_menu", text=asset_label, icon='ADD')
 
         layout.template_modifiers()
@@ -142,16 +150,21 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
         ob_type = context.object.type
 
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
-            self.operator_modifier_add_asset(layout, n_('Array'), icon='MOD_ARRAY')
+            if geometry_nodes_supported(ob_type):
+                self.operator_modifier_add_asset(layout, n_('Array'), icon='MOD_ARRAY')
+            else:
+                self.operator_modifier_add(layout, 'ARRAY')
+
             self.operator_modifier_add(layout, 'BEVEL')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'BOOLEAN')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
             self.operator_modifier_add(layout, 'BUILD')
-            self.operator_modifier_add_asset(layout, n_('Curve to Tube'), icon='MOD_CURVE_TO_TUBE')
+            if geometry_nodes_supported(ob_type):
+                self.operator_modifier_add_asset(layout, n_('Curve to Tube'), icon='MOD_CURVE_TO_TUBE')
             self.operator_modifier_add(layout, 'DECIMATE')
             self.operator_modifier_add(layout, 'EDGE_SPLIT')
-        if ob_type in {'MESH', 'CURVE', 'CURVES', 'FONT', 'SURFACE', 'VOLUME', 'POINTCLOUD'}:
+        if geometry_nodes_supported(ob_type):
             self.operator_modifier_add(layout, 'NODES')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'MASK')
@@ -163,7 +176,8 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'MULTIRES')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
             self.operator_modifier_add(layout, 'REMESH')
-            self.operator_modifier_add_asset(layout, n_('Scatter on Surface'), icon='MOD_SCATTER_ON_SURFACE')
+            if geometry_nodes_supported(ob_type):
+                self.operator_modifier_add_asset(layout, n_('Scatter on Surface'), icon='MOD_SCATTER_ON_SURFACE')
             self.operator_modifier_add(layout, 'SCREW')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'SKIN')
@@ -178,7 +192,7 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'WIREFRAME')
         if ob_type == 'GREASEPENCIL':
-            self.operator_modifier_add(layout, 'GREASE_PENCIL_ARRAY')
+            self.operator_modifier_add_asset(layout, n_('Array'), icon='MOD_ARRAY')
             self.operator_modifier_add(layout, 'GREASE_PENCIL_BUILD')
             self.operator_modifier_add(layout, 'GREASE_PENCIL_DASH')
             self.operator_modifier_add(layout, 'GREASE_PENCIL_ENVELOPE')
@@ -191,7 +205,7 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'GREASE_PENCIL_SIMPLIFY')
             self.operator_modifier_add(layout, 'GREASE_PENCIL_SUBDIV')
 
-        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
+        if geometry_nodes_supported(ob_type):
             self.layout.separator(type='LINE')
             self.operator_modifier_add(layout, 'ARRAY', text=n_("Array (Legacy)"), no_icon=True)
 

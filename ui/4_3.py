@@ -14,6 +14,14 @@ ObjectConstraintPanel = properties_constraint.ObjectConstraintPanel
 BoneConstraintPanel = properties_constraint.BoneConstraintPanel
 
 
+def geometry_nodes_supported(obj_type):
+    return obj_type in {
+        'MESH', 'CURVE', 'CURVES',
+        'FONT', 'VOLUME', 'POINTCLOUD', 'GREASEPENCIL',
+    }
+
+
+
 class SearchToTypeMenu:
     bl_options = {'SEARCH_ON_KEY_PRESS'}
 
@@ -35,6 +43,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
         prefs = fetch_user_preferences()
         modifier_label = prefs.modifier_menu_label
         asset_label = prefs.asset_menu_label
+        ob_type = context.object.type
 
         if prefs.stacking == 'VERTICAL':
             sublayout = layout
@@ -48,7 +57,7 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
                 
         elif prefs.display_as == "BUTTON":
             sublayout.operator("object.invoke_classic_modifier_menu", text=modifier_label, icon='ADD')
-            if prefs.show_assets:
+            if prefs.show_assets and geometry_nodes_supported(ob_type):
                 sublayout.operator("object.invoke_asset_modifier_menu", text=asset_label, icon='ADD')
 
         layout.template_modifiers()
@@ -147,7 +156,7 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'BUILD')
             self.operator_modifier_add(layout, 'DECIMATE')
             self.operator_modifier_add(layout, 'EDGE_SPLIT')
-        if ob_type in {'MESH', 'CURVE', 'CURVES', 'FONT', 'SURFACE', 'VOLUME', 'POINTCLOUD'}:
+        if geometry_nodes_supported(ob_type):
             self.operator_modifier_add(layout, 'NODES')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'MASK')
