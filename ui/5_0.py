@@ -1,5 +1,8 @@
 import bpy
 from bpy.types import Panel, Menu
+from bpy.app.translations import (
+    pgettext_n as n_,
+)
 
 from bl_ui import properties_data_modifier, properties_data_shaderfx, properties_constraint
 from ..utils import (
@@ -136,15 +139,16 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
     def draw(self, context):
         layout = self.layout
         prefs = fetch_user_preferences()
-
         ob_type = context.object.type
+
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
-            self.operator_modifier_add(layout, 'ARRAY')
+            self.operator_modifier_add_asset(layout, n_('Array'), icon='MOD_ARRAY')
             self.operator_modifier_add(layout, 'BEVEL')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'BOOLEAN')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
             self.operator_modifier_add(layout, 'BUILD')
+            self.operator_modifier_add_asset(layout, n_('Curve to Tube'), icon='MOD_CURVE_TO_TUBE')
             self.operator_modifier_add(layout, 'DECIMATE')
             self.operator_modifier_add(layout, 'EDGE_SPLIT')
         if ob_type in {'MESH', 'CURVE', 'CURVES', 'FONT', 'SURFACE', 'VOLUME', 'POINTCLOUD'}:
@@ -159,6 +163,7 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'MULTIRES')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
             self.operator_modifier_add(layout, 'REMESH')
+            self.operator_modifier_add_asset(layout, n_('Scatter on Surface'), icon='MOD_SCATTER_ON_SURFACE')
             self.operator_modifier_add(layout, 'SCREW')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'SKIN')
@@ -186,8 +191,12 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'GREASE_PENCIL_SIMPLIFY')
             self.operator_modifier_add(layout, 'GREASE_PENCIL_SUBDIV')
 
+        if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE'}:
+            self.layout.separator(type='LINE')
+            self.operator_modifier_add(layout, 'ARRAY', text=n_("Array (Legacy)"), no_icon=True)
+
         if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
-            layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
+            layout.template_modifier_asset_menu_items(catalog_path=self.bl_label, skip_essentials=True)
 
 
 class OBJECT_MT_modifier_add_deform(ModifierAddMenu, Menu):
@@ -323,13 +332,15 @@ class OBJECT_MT_modifier_add_assets(ModifierAddMenu, SearchToTypeMenu, Menu):
 
 class ModifierAssetMenu:
     def draw(self, context):
-        self.layout.template_modifier_asset_menu_items(catalog_path=self.bl_label)
+        skip_essentials = getattr(self, "skip_essentials", False)
+        self.layout.template_modifier_asset_menu_items(catalog_path=self.bl_label, skip_essentials=skip_essentials)
 
 class OBJECT_MT_modifier_add_edit_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
     bl_label = OBJECT_MT_modifier_add_edit.bl_label
 
 class OBJECT_MT_modifier_add_generate_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
     bl_label = OBJECT_MT_modifier_add_generate.bl_label
+    skip_essentials = True
 
 class OBJECT_MT_modifier_add_deform_assets(ModifierAssetMenu, ModifierAddMenu, Menu):
     bl_label = OBJECT_MT_modifier_add_deform.bl_label
