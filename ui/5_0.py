@@ -6,6 +6,7 @@ from bpy.app.translations import (
 
 from bl_ui import properties_data_modifier, properties_data_shaderfx, properties_constraint
 from ..utils import (
+    is_menu_search, 
     fetch_user_preferences, 
     fetch_menu_items,
     fetch_translation_context,
@@ -75,7 +76,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
         return ob
 
     @staticmethod
-    def draw_column(layout, header, menu_name, icon):
+    def draw_column(context, layout, header, menu_name, icon):
         prefs = fetch_user_preferences()
         header_mode = prefs.modifier_headers
         col = layout.column()
@@ -87,7 +88,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
             col.label(text=header, icon=icon)
             col.separator()
         
-        if prefs.display_as == 'BUTTON' and layout.operator_context == 'INVOKE_REGION_WIN':
+        if prefs.display_as == 'BUTTON' and is_menu_search(context, layout):
             col.menu(menu_name)
         else:
             col.menu_contents(menu_name)
@@ -97,15 +98,15 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
         row = layout.row()
         ob_type = context.object.type
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'GREASEPENCIL'}:
-            self.draw_column(row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
+            self.draw_column(context, row, header="Edit", menu_name="OBJECT_MT_modifier_add_edit", icon='EDITMODE_HLT')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'VOLUME', 'GREASEPENCIL'}:
-            self.draw_column(row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')
+            self.draw_column(context, row, header="Generate", menu_name="OBJECT_MT_modifier_add_generate", icon='FILE_3D')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE', 'VOLUME', 'GREASEPENCIL'}:
-            self.draw_column(row, header="Deform", menu_name="OBJECT_MT_modifier_add_deform", icon='STROKE')
+            self.draw_column(context, row, header="Deform", menu_name="OBJECT_MT_modifier_add_deform", icon='STROKE')
         if ob_type in {'MESH', 'CURVE', 'FONT', 'SURFACE', 'LATTICE'}:
-            self.draw_column(row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
+            self.draw_column(context, row, header="Physics", menu_name="OBJECT_MT_modifier_add_physics", icon='PHYSICS')
         if ob_type in {'GREASEPENCIL'}:
-            self.draw_column(row, header="Color", menu_name="OBJECT_MT_modifier_add_color", icon='OVERLAY')
+            self.draw_column(context, row, header="Color", menu_name="OBJECT_MT_modifier_add_color", icon='OVERLAY')
 
 
 class OBJECT_MT_modifier_add_edit(ModifierAddMenu, Menu):
@@ -439,7 +440,7 @@ class FlatMenuBaseclass(SearchToTypeMenu):
     bl_label = ""
 
     @staticmethod
-    def draw_column(layout, header, menu_name, icon):
+    def draw_column(context, layout, header, menu_name, icon):
         prefs = fetch_user_preferences()
         header_mode = prefs.modifier_headers
         
@@ -452,7 +453,7 @@ class FlatMenuBaseclass(SearchToTypeMenu):
             col.label(text=header, icon=icon)
             col.separator()
         
-        if prefs.display_as == 'BUTTON' and layout.operator_context == 'INVOKE_REGION_WIN':
+        if prefs.display_as == 'BUTTON' and is_menu_search(context, layout):
             col.menu(menu_name)
         else:
             col.menu_contents(menu_name)
@@ -494,10 +495,10 @@ class OBJECT_MT_gpencil_shaderfx_add(FlatMenuBaseclass, Menu):
         ob = context.object
         return ob and ob.type == 'GREASEPENCIL'
 
-    def draw(self, _context):
+    def draw(self, context):
         layout = self.layout.row()
 
-        if layout.operator_context == 'INVOKE_REGION_WIN':
+        if is_menu_search(context, layout):
             header = "Effect"
         else:
             header = "Add Effect"
@@ -511,13 +512,13 @@ class OBJECT_MT_constraint_add(FlatMenuBaseclass, Menu):
     OPERATOR_ID = "object.constraint_add"
     TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    def draw(self, _context):
+    def draw(self, context):
         layout = self.layout.row()
 
-        self.draw_column(layout, header="Motion Tracking", menu_name="OBJECT_MT_constraint_add_motion_tracking", icon='TRACKING')
-        self.draw_column(layout, header="Transform", menu_name="OBJECT_MT_constraint_add_transform", icon='OBJECT_HIDDEN')
-        self.draw_column(layout, header="Tracking", menu_name="OBJECT_MT_constraint_add_tracking", icon='TRACKER')
-        self.draw_column(layout, header="Relationship", menu_name="OBJECT_MT_constraint_add_relationship", icon='DRIVER')
+        self.draw_column(context, layout, header="Motion Tracking", menu_name="OBJECT_MT_constraint_add_motion_tracking", icon='TRACKING')
+        self.draw_column(context, layout, header="Transform", menu_name="OBJECT_MT_constraint_add_transform", icon='OBJECT_HIDDEN')
+        self.draw_column(context, layout, header="Tracking", menu_name="OBJECT_MT_constraint_add_tracking", icon='TRACKER')
+        self.draw_column(context, layout, header="Relationship", menu_name="OBJECT_MT_constraint_add_relationship", icon='DRIVER')
 
 
 class OBJECT_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):
@@ -558,13 +559,13 @@ class BONE_MT_constraint_add(FlatMenuBaseclass, Menu):
     OPERATOR_ID = "pose.constraint_add"
     TRANSLATION_CONTEXT = fetch_translation_context(class_name="Constraint")
 
-    def draw(self, _context):
+    def draw(self, context):
         layout = self.layout.row()
 
-        self.draw_column(layout, header="Motion Tracking", menu_name="BONE_MT_constraint_add_motion_tracking", icon='TRACKING')
-        self.draw_column(layout, header="Transform", menu_name="BONE_MT_constraint_add_transform", icon='OBJECT_HIDDEN')
-        self.draw_column(layout, header="Tracking", menu_name="BONE_MT_constraint_add_tracking", icon='TRACKER')
-        self.draw_column(layout, header="Relationship", menu_name="BONE_MT_constraint_add_relationship", icon='DRIVER')
+        self.draw_column(context, layout, header="Motion Tracking", menu_name="BONE_MT_constraint_add_motion_tracking", icon='TRACKING')
+        self.draw_column(context, layout, header="Transform", menu_name="BONE_MT_constraint_add_transform", icon='OBJECT_HIDDEN')
+        self.draw_column(context, layout, header="Tracking", menu_name="BONE_MT_constraint_add_tracking", icon='TRACKER')
+        self.draw_column(context, layout, header="Relationship", menu_name="BONE_MT_constraint_add_relationship", icon='DRIVER')
 
 
 class BONE_MT_constraint_add_motion_tracking(ColumnMenuBaseclass, Menu):

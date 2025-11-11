@@ -1,6 +1,14 @@
 import bpy
 
 
+if bpy.app.version >= (4, 5):
+    def is_menu_search(context, _layout):
+        return getattr(context, "is_menu_search", False)
+else:
+    def is_menu_search(_context, layout):
+        return layout.operator_context == 'INVOKE_REGION_WIN'
+
+
 def fetch_user_preferences(attr_id=None):
     prefs = bpy.context.preferences.addons[__package__].preferences
 
