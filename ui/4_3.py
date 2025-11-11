@@ -86,7 +86,7 @@ class OBJECT_MT_modifier_add(SearchToTypeMenu, ModifierAddMenu, Menu):
             col.label(text=header, icon=icon)
             col.separator()
         
-        if prefs.display_as == 'BUTTON' and is_menu_search(context, layout):
+        if is_menu_search(context, layout):
             col.menu(menu_name)
         else:
             col.menu_contents(menu_name)
@@ -437,7 +437,7 @@ class FlatMenuBaseclass(SearchToTypeMenu):
             col.label(text=header, icon=icon)
             col.separator()
         
-        if prefs.display_as == 'BUTTON' and is_menu_search(context, layout):
+        if is_menu_search(context, layout):
             col.menu(menu_name)
         else:
             col.menu_contents(menu_name)

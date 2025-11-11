@@ -6,7 +6,8 @@ if bpy.app.version >= (4, 5):
         return getattr(context, "is_menu_search", False)
 else:
     def is_menu_search(_context, layout):
-        return layout.operator_context == 'INVOKE_REGION_WIN'
+        display_as = fetch_user_preferences("display_as")
+        return (display_as == 'BUTTON') and (layout.operator_context == 'INVOKE_REGION_WIN')
 
 
 def fetch_user_preferences(attr_id=None):
