@@ -164,7 +164,7 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
                 self.operator_modifier_add_asset(layout, n_('Curve to Tube'), icon='MOD_CURVE_TO_TUBE')
             self.operator_modifier_add(layout, 'DECIMATE')
             self.operator_modifier_add(layout, 'EDGE_SPLIT')
-        if geometry_nodes_supported(ob_type):
+        if geometry_nodes_supported(ob_type) and ob_type != 'GREASEPENCIL':
             self.operator_modifier_add(layout, 'NODES')
         if ob_type == 'MESH':
             self.operator_modifier_add(layout, 'MASK')
