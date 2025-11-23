@@ -51,13 +51,13 @@ class DATA_PT_modifiers(ModifierButtonsPanel, Panel):
             sublayout = layout.row()
 
         if prefs.display_as == "DROPDOWN":
-            if ob_type != 'CURVES' and bpy.app.version < (4, 2):
+            if ob_type != 'CURVES' or bpy.app.version >= (4, 2):
                 sublayout.menu("OBJECT_MT_modifier_add", text=modifier_label)
             if prefs.show_assets:
                 sublayout.menu("OBJECT_MT_modifier_add_assets", text=asset_label)
                 
         elif prefs.display_as == "BUTTON":
-            if ob_type != 'CURVES' and bpy.app.version < (4, 2):
+            if ob_type != 'CURVES' or bpy.app.version >= (4, 2):
                 sublayout.operator("object.invoke_classic_modifier_menu", text=modifier_label, icon='ADD')
             if prefs.show_assets and geometry_nodes_supported(ob_type):
                 sublayout.operator("object.invoke_asset_modifier_menu", text=asset_label, icon='ADD')
