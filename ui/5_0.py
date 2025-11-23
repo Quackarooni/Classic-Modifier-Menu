@@ -207,8 +207,9 @@ class OBJECT_MT_modifier_add_generate(ModifierAddMenu, Menu):
             self.operator_modifier_add(layout, 'GREASE_PENCIL_SUBDIV')
 
         if geometry_nodes_supported(ob_type):
-            self.layout.separator(type='LINE')
-            self.operator_modifier_add(layout, 'ARRAY', text=n_("Array (Legacy)"), no_icon=True)
+            if prefs.show_legacy:
+                self.layout.separator(type='LINE')
+                self.operator_modifier_add(layout, 'ARRAY', text=n_("Array (Legacy)"), no_icon=True)
 
         if prefs.built_in_asset_categories in {'APPEND', 'SHOW_AND_APPEND'}:
             layout.template_modifier_asset_menu_items(catalog_path=self.bl_label, skip_essentials=True)

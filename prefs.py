@@ -82,6 +82,14 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         update=toggle_input_mode
     )
 
+    if bpy.app.version >= (5, 0):
+        show_legacy: BoolProperty(
+            name="Show Legacy Modifiers",
+            default=True,
+            description="Keep legacy modifiers visible in the Add Modifier menu",
+        )
+
+
     def draw_prop_newline(self, layout, prop_name):
         prop_label = self.__annotations__[prop_name].keywords["name"]
         layout.label(text=f"{prop_label}:")
@@ -103,7 +111,10 @@ class ClassicModifierPreferences(bpy.types.AddonPreferences):
         row = layout.row()
         col1 = row.column()
         col1.label(text="Modifier Menu Settings:")
-        col1.box().column().prop(self, "modifier_menu_label")
+        box = col1.box().column()
+        box.prop(self, "modifier_menu_label")    
+        if hasattr(self, "show_legacy"):
+            box.prop(self, "show_legacy")
 
         col1.label(text="Header Settings:")
         box = col1.box().column()
