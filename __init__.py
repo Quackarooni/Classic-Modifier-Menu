@@ -67,14 +67,20 @@ def register():
     for module in modules:
         module.register()
 
-    reload_prepended_and_appended_draw_funcs()
-    
+    try:
+        reload_prepended_and_appended_draw_funcs()
+    except Exception:
+        pass
+        
 
 def unregister():
     for module in modules:
         module.unregister()
 
-    reload_prepended_and_appended_draw_funcs()
+    try:
+        reload_prepended_and_appended_draw_funcs()
+    except Exception:
+        pass
     
 
 if __name__ == "__main__":
